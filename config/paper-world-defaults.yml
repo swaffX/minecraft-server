@@ -68,7 +68,7 @@ collisions:
   allow-player-cramming-damage: false
   allow-vehicle-collisions: true
   fix-climbing-bypassing-cramming-rule: false
-  max-entity-collisions: 8
+  max-entity-collisions: 4
   only-players-collide: false
 command-blocks:
   force-follow-perm-level: true
@@ -241,7 +241,7 @@ environment:
   max-block-ticks: 65536
   max-fluid-ticks: 65536
   nether-ceiling-void-damage-height: disabled
-  optimize-explosions: false
+  optimize-explosions: true
   portal-create-radius: 16
   portal-search-radius: 128
   portal-search-vanilla-dimension-scaling: true
@@ -295,7 +295,7 @@ misc:
   disable-sprint-interruption-on-attack: false
   legacy-ender-pearl-behavior: false
   max-leash-distance: default
-  redstone-implementation: VANILLA
+  redstone-implementation: ALTERNATE_CURRENT
   show-sign-click-command-failure-msgs-to-player: false
   update-pathfinding-on-block-update: true
 scoreboards:
