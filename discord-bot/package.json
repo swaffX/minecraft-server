@@ -1,0 +1,14 @@
+{
+  "name": "minecraft-discord-bot",
+  "version": "1.0.0",
+  "description": "Minecraft sunucu bilgi botu",
+  "main": "bot.js",
+  "scripts": {
+    "start": "node bot.js"
+  },
+  "dependencies": {
+    "discord.js": "^14.14.1",
+    "minecraft-server-util": "^5.5.2",
+    "dotenv": "^16.4.5"
+  }
+}
