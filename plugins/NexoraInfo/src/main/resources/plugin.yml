@@ -1,0 +1,6 @@
+name: NexoraInfo
+version: 1.0.0
+main: com.nexora.info.NexoraInfo
+api-version: 1.21
+author: Nexora
+description: Scoreboard bilgi paneli ve hoşgeldin mesajları

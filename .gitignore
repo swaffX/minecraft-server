@@ -20,3 +20,7 @@ plugins/*
 !plugins/*.yml
 !plugins/*.yaml
 !plugins/*/config.yml
+
+# NexoraInfo plugin kaynak kodlarını tut
+!plugins/NexoraInfo/
+!plugins/NexoraInfo/**
