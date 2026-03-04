@@ -10,7 +10,8 @@ const CONFIG = {
     SERVER_INFO_CHANNEL: '1478864682948231219',
     MC_SERVER_IP: '194.105.5.37',
     MC_SERVER_PORT: 25565,
-    UPDATE_INTERVAL: 30000 // 30 saniye
+    UPDATE_INTERVAL: 30000, // 30 saniye
+    MESSAGE_ID_FILE: './message_id.txt'
 };
 
 const client = new Client({
@@ -44,10 +45,25 @@ async function updateServerInfo() {
 
         const channel = await client.channels.fetch(CONFIG.SERVER_INFO_CHANNEL);
         
-        if (serverInfoMessage) {
-            await serverInfoMessage.edit({ embeds: [embed] });
+        // Mesaj ID'sini dosyadan oku
+        let messageId = null;
+        if (fs.existsSync(CONFIG.MESSAGE_ID_FILE)) {
+            messageId = fs.readFileSync(CONFIG.MESSAGE_ID_FILE, 'utf8').trim();
+        }
+        
+        if (messageId) {
+            try {
+                const message = await channel.messages.fetch(messageId);
+                await message.edit({ embeds: [embed] });
+                serverInfoMessage = message;
+            } catch (error) {
+                // Mesaj bulunamadı, yeni oluştur
+                serverInfoMessage = await channel.send({ embeds: [embed] });
+                fs.writeFileSync(CONFIG.MESSAGE_ID_FILE, serverInfoMessage.id);
+            }
         } else {
             serverInfoMessage = await channel.send({ embeds: [embed] });
+            fs.writeFileSync(CONFIG.MESSAGE_ID_FILE, serverInfoMessage.id);
         }
     } catch (error) {
         console.error('Sunucu bilgisi güncellenirken hata:', error);
@@ -65,10 +81,25 @@ async function updateServerInfo() {
 
         const channel = await client.channels.fetch(CONFIG.SERVER_INFO_CHANNEL);
         
-        if (serverInfoMessage) {
-            await serverInfoMessage.edit({ embeds: [embed] });
+        // Mesaj ID'sini dosyadan oku
+        let messageId = null;
+        if (fs.existsSync(CONFIG.MESSAGE_ID_FILE)) {
+            messageId = fs.readFileSync(CONFIG.MESSAGE_ID_FILE, 'utf8').trim();
+        }
+        
+        if (messageId) {
+            try {
+                const message = await channel.messages.fetch(messageId);
+                await message.edit({ embeds: [embed] });
+                serverInfoMessage = message;
+            } catch (error) {
+                // Mesaj bulunamadı, yeni oluştur
+                serverInfoMessage = await channel.send({ embeds: [embed] });
+                fs.writeFileSync(CONFIG.MESSAGE_ID_FILE, serverInfoMessage.id);
+            }
         } else {
             serverInfoMessage = await channel.send({ embeds: [embed] });
+            fs.writeFileSync(CONFIG.MESSAGE_ID_FILE, serverInfoMessage.id);
         }
     }
 }
