@@ -1,10 +1,9 @@
 const express = require('express');
 const session = require('express-session');
-const bcrypt = require('bcrypt');
+const axios = require('axios');
 const { exec } = require('child_process');
 const { status } = require('minecraft-server-util');
 const fs = require('fs');
-const path = require('path');
 const WebSocket = require('ws');
 require('dotenv').config();
 
@@ -16,44 +15,91 @@ const CONFIG = {
     MC_SERVER_IP: '194.105.5.37',
     MC_SERVER_PORT: 25565,
     LOG_FILE: '/opt/minecraft/logs/latest.log',
-    ADMIN_USERNAME: process.env.ADMIN_USERNAME || 'admin',
-    ADMIN_PASSWORD_HASH: process.env.ADMIN_PASSWORD_HASH // bcrypt hash
+    ALLOWED_USER_ID: '315875588906680330',
+    DISCORD_CLIENT_ID: process.env.DISCORD_CLIENT_ID,
+    DISCORD_CLIENT_SECRET: process.env.DISCORD_CLIENT_SECRET,
+    DISCORD_REDIRECT_URI: process.env.DISCORD_REDIRECT_URI || 'http://194.105.5.37:3000/auth/callback'
 };
 
 // Middleware
 app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
 app.use(express.static('public'));
 app.use(session({
-    secret: process.env.SESSION_SECRET || 'minecraft-panel-secret-key',
+    secret: process.env.SESSION_SECRET || 'minecraft-panel-secret',
     resave: false,
     saveUninitialized: false,
-    cookie: { maxAge: 24 * 60 * 60 * 1000 } // 24 saat
+    cookie: { maxAge: 7 * 24 * 60 * 60 * 1000 } // 7 gün
 }));
 
 // Auth middleware
 function requireAuth(req, res, next) {
-    if (req.session.authenticated) {
+    if (req.session.user && req.session.user.id === CONFIG.ALLOWED_USER_ID) {
         next();
     } else {
         res.status(401).json({ error: 'Unauthorized' });
     }
 }
 
-// Routes
-app.post('/api/login', async (req, res) => {
-    const { username, password } = req.body;
+// Discord OAuth Routes
+app.get('/auth/discord', (req, res) => {
+    const authUrl = `https://discord.com/api/oauth2/authorize?client_id=${CONFIG.DISCORD_CLIENT_ID}&redirect_uri=${encodeURIComponent(CONFIG.DISCORD_REDIRECT_URI)}&response_type=code&scope=identify`;
+    res.redirect(authUrl);
+});
+
+app.get('/auth/callback', async (req, res) => {
+    const code = req.query.code;
     
-    if (username === CONFIG.ADMIN_USERNAME) {
-        const match = await bcrypt.compare(password, CONFIG.ADMIN_PASSWORD_HASH);
-        if (match) {
-            req.session.authenticated = true;
-            req.session.username = username;
-            return res.json({ success: true });
-        }
+    if (!code) {
+        return res.redirect('/?error=no_code');
     }
     
-    res.status(401).json({ error: 'Invalid credentials' });
+    try {
+        // Exchange code for token
+        const tokenResponse = await axios.post('https://discord.com/api/oauth2/token', 
+            new URLSearchParams({
+                client_id: CONFIG.DISCORD_CLIENT_ID,
+                client_secret: CONFIG.DISCORD_CLIENT_SECRET,
+                grant_type: 'authorization_code',
+                code: code,
+                redirect_uri: CONFIG.DISCORD_REDIRECT_URI
+            }),
+            {
+                headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
+            }
+        );
+        
+        const accessToken = tokenResponse.data.access_token;
+        
+        // Get user info
+        const userResponse = await axios.get('https://discord.com/api/users/@me', {
+            headers: { Authorization: `Bearer ${accessToken}` }
+        });
+        
+        const user = userResponse.data;
+        
+        // Check if user is allowed
+        if (user.id === CONFIG.ALLOWED_USER_ID) {
+            req.session.user = {
+                id: user.id,
+                username: user.username,
+                avatar: user.avatar ? `https://cdn.discordapp.com/avatars/${user.id}/${user.avatar}.png` : null
+            };
+            res.redirect('/?success=true');
+        } else {
+            res.redirect('/?error=unauthorized');
+        }
+    } catch (error) {
+        console.error('Discord auth error:', error);
+        res.redirect('/?error=auth_failed');
+    }
+});
+
+app.get('/api/user', (req, res) => {
+    if (req.session.user) {
+        res.json(req.session.user);
+    } else {
+        res.status(401).json({ error: 'Not authenticated' });
+    }
 });
 
 app.post('/api/logout', (req, res) => {
@@ -61,6 +107,7 @@ app.post('/api/logout', (req, res) => {
     res.json({ success: true });
 });
 
+// Server API Routes
 app.get('/api/status', requireAuth, async (req, res) => {
     try {
         const response = await status(CONFIG.MC_SERVER_IP, CONFIG.MC_SERVER_PORT);
@@ -143,7 +190,7 @@ app.get('/api/system', requireAuth, (req, res) => {
     });
 });
 
-// WebSocket for real-time logs
+// WebSocket
 const wss = new WebSocket.Server({ noServer: true });
 
 wss.on('connection', (ws) => {
@@ -167,7 +214,7 @@ wss.on('connection', (ws) => {
 });
 
 const server = app.listen(PORT, () => {
-    console.log(`Web panel çalışıyor: http://localhost:${PORT}`);
+    console.log(`🎮 Minecraft Panel: http://localhost:${PORT}`);
 });
 
 server.on('upgrade', (request, socket, head) => {

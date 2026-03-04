@@ -5,34 +5,40 @@ let statusInterval = null;
 // Elements
 const loginScreen = document.getElementById('login-screen');
 const dashboard = document.getElementById('dashboard');
-const loginForm = document.getElementById('login-form');
+const discordLoginBtn = document.getElementById('discord-login-btn');
 const loginError = document.getElementById('login-error');
 const logoutBtn = document.getElementById('logout-btn');
 
-// Login
-loginForm.addEventListener('submit', async (e) => {
-    e.preventDefault();
-    
-    const username = document.getElementById('username').value;
-    const password = document.getElementById('password').value;
-    
+// Check URL params for errors
+const urlParams = new URLSearchParams(window.location.search);
+if (urlParams.get('error')) {
+    const errorMap = {
+        'no_code': 'Giriş kodu alınamadı!',
+        'unauthorized': 'Bu panele erişim yetkiniz yok!',
+        'auth_failed': 'Discord girişi başarısız!'
+    };
+    loginError.textContent = errorMap[urlParams.get('error')] || 'Bir hata oluştu!';
+    loginError.classList.add('show');
+}
+
+// Check if already logged in
+checkAuth();
+
+async function checkAuth() {
     try {
-        const response = await fetch('/api/login', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ username, password })
-        });
-        
+        const response = await fetch('/api/user');
         if (response.ok) {
-            loginScreen.style.display = 'none';
-            dashboard.style.display = 'block';
-            initDashboard();
-        } else {
-            loginError.textContent = 'Hatalı kullanıcı adı veya şifre!';
+            const user = await response.json();
+            showDashboard(user);
         }
     } catch (error) {
-        loginError.textContent = 'Bağlantı hatası!';
+        console.log('Not authenticated');
     }
+}
+
+// Discord Login
+discordLoginBtn.addEventListener('click', () => {
+    window.location.href = '/auth/discord';
 });
 
 // Logout
@@ -40,6 +46,20 @@ logoutBtn.addEventListener('click', async () => {
     await fetch('/api/logout', { method: 'POST' });
     location.reload();
 });
+
+// Show Dashboard
+function showDashboard(user) {
+    loginScreen.style.display = 'none';
+    dashboard.style.display = 'block';
+    
+    // Set user info
+    document.getElementById('user-name').textContent = user.username;
+    if (user.avatar) {
+        document.getElementById('user-avatar').src = user.avatar;
+    }
+    
+    initDashboard();
+}
 
 // Dashboard
 function initDashboard() {
@@ -77,7 +97,7 @@ async function updateStatus() {
         
         if (data.online) {
             statusEl.textContent = '🟢 Çevrimiçi';
-            statusEl.className = 'status-value status-online';
+            statusEl.className = 'stat-value status-online';
             playerCountEl.textContent = `${data.players.online}/${data.players.max}`;
             pingEl.textContent = `${data.ping}ms`;
             versionEl.textContent = data.version;
@@ -86,24 +106,53 @@ async function updateStatus() {
             if (data.players.list && data.players.list.length > 0) {
                 playersListEl.innerHTML = data.players.list.map(player => `
                     <div class="player-item">
-                        <img src="https://mc-heads.net/avatar/${player.name}/32" 
+                        <img src="https://mc-heads.net/avatar/${player.name}/40" 
                              alt="${player.name}" 
                              class="player-avatar">
                         <span>${player.name}</span>
                     </div>
                 `).join('');
             } else if (data.players.online > 0) {
-                playersListEl.innerHTML = `<p class="empty-state">${data.players.online} oyuncu çevrimiçi</p>`;
+                playersListEl.innerHTML = `
+                    <div class="empty-state">
+                        <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                            <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                            <circle cx="9" cy="7" r="4"></circle>
+                            <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+                            <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+                        </svg>
+                        <p>${data.players.online} oyuncu çevrimiçi</p>
+                    </div>
+                `;
             } else {
-                playersListEl.innerHTML = '<p class="empty-state">Oyuncu yok</p>';
+                playersListEl.innerHTML = `
+                    <div class="empty-state">
+                        <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                            <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                            <circle cx="9" cy="7" r="4"></circle>
+                            <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+                            <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+                        </svg>
+                        <p>Oyuncu yok</p>
+                    </div>
+                `;
             }
         } else {
             statusEl.textContent = '🔴 Çevrimdışı';
-            statusEl.className = 'status-value status-offline';
+            statusEl.className = 'stat-value status-offline';
             playerCountEl.textContent = '-/-';
             pingEl.textContent = '- ms';
             versionEl.textContent = '-';
-            playersListEl.innerHTML = '<p class="empty-state">Sunucu çevrimdışı</p>';
+            playersListEl.innerHTML = `
+                <div class="empty-state">
+                    <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                        <circle cx="12" cy="12" r="10"></circle>
+                        <line x1="15" y1="9" x2="9" y2="15"></line>
+                        <line x1="9" y1="9" x2="15" y2="15"></line>
+                    </svg>
+                    <p>Sunucu çevrimdışı</p>
+                </div>
+            `;
         }
     } catch (error) {
         console.error('Status update error:', error);
@@ -145,7 +194,13 @@ async function updateSystem() {
 }
 
 async function serverAction(action) {
-    if (!confirm(`Sunucuyu ${action === 'start' ? 'başlatmak' : action === 'restart' ? 'yeniden başlatmak' : 'durdurmak'} istediğinize emin misiniz?`)) {
+    const messages = {
+        start: 'başlatmak',
+        restart: 'yeniden başlatmak',
+        stop: 'durdurmak'
+    };
+    
+    if (!confirm(`Sunucuyu ${messages[action]} istediğinize emin misiniz?`)) {
         return;
     }
     
@@ -154,14 +209,19 @@ async function serverAction(action) {
         const data = await response.json();
         
         if (data.success) {
-            alert(data.message);
+            showNotification(data.message, 'success');
             setTimeout(updateStatus, 2000);
         } else {
-            alert('Hata: ' + data.error);
+            showNotification('Hata: ' + data.error, 'error');
         }
     } catch (error) {
-        alert('İşlem başarısız!');
+        showNotification('İşlem başarısız!', 'error');
     }
+}
+
+function showNotification(message, type) {
+    // Simple notification (you can enhance this)
+    alert(message);
 }
 
 function connectWebSocket() {

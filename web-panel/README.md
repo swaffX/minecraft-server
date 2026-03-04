@@ -1,28 +1,37 @@
-# Minecraft Web Panel
+# Nexora Minecraft Web Panel
 
-Modern ve güvenli Minecraft sunucu yönetim paneli.
+Ultra modern glassmorphism tasarımlı Minecraft sunucu yönetim paneli.
 
 ## Özellikler
 
+- ✅ Discord OAuth2 girişi
+- ✅ Sadece yetkili kullanıcı erişimi
 - ✅ Gerçek zamanlı sunucu durumu
 - ✅ Oyuncu listesi ve avatarları
 - ✅ Sunucu kontrolleri (Başlat/Durdur/Restart)
 - ✅ Canlı log izleme (WebSocket)
 - ✅ Sistem bilgileri (RAM, Disk)
-- ✅ Güvenli giriş sistemi (bcrypt)
-- ✅ Modern ve responsive tasarım
+- ✅ Ultra modern glassmorphism tasarım
+- ✅ Animasyonlu arka plan
+- ✅ Responsive tasarım
+
+## Discord Bot Kurulumu
+
+### 1. Discord Developer Portal
+
+1. https://discord.com/developers/applications
+2. "New Application" > İsim ver > Create
+3. "OAuth2" > "General":
+   - Client ID'yi kopyala
+   - Client Secret oluştur ve kopyala
+   - Redirects: `http://194.105.5.37:3000/auth/callback` ekle
 
 ## Kurulum
 
-### 1. Şifre Hash Oluştur
+### 1. .env Dosyası Oluştur
 
 ```bash
-node -e "const bcrypt = require('bcrypt'); bcrypt.hash('ŞİFRENİZ', 10, (err, hash) => console.log(hash));"
-```
-
-### 2. .env Dosyası Oluştur
-
-```bash
+cd /opt/minecraft/web-panel
 cp .env.example .env
 nano .env
 ```
@@ -30,24 +39,25 @@ nano .env
 İçine:
 ```
 PORT=3000
-ADMIN_USERNAME=admin
-ADMIN_PASSWORD_HASH=yukarıdaki_hash
+DISCORD_CLIENT_ID=discord_client_id_buraya
+DISCORD_CLIENT_SECRET=discord_client_secret_buraya
+DISCORD_REDIRECT_URI=http://194.105.5.37:3000/auth/callback
 SESSION_SECRET=random-secret-key-123456
 ```
 
-### 3. Bağımlılıkları Kur
+### 2. Bağımlılıkları Kur
 
 ```bash
 npm install
 ```
 
-### 4. Başlat
+### 3. Başlat
 
 ```bash
 npm start
 ```
 
-Panel: http://VPS-IP:3000
+Panel: http://194.105.5.37:3000
 
 ## Systemd Servisi
 
@@ -78,6 +88,7 @@ Başlat:
 systemctl daemon-reload
 systemctl start minecraft-panel
 systemctl enable minecraft-panel
+systemctl status minecraft-panel
 ```
 
 ## Firewall
@@ -88,6 +99,16 @@ sudo ufw allow 3000/tcp
 
 ## Güvenlik
 
-- Sadece güvenilir IP'lerden erişim sağlayın
-- Güçlü şifre kullanın
-- HTTPS kullanın (Nginx reverse proxy önerilir)
+- Discord OAuth2 ile güvenli giriş
+- Sadece belirlenen Discord ID erişebilir
+- Session tabanlı kimlik doğrulama
+- HTTPS kullanımı önerilir (Nginx reverse proxy)
+
+## Tasarım
+
+- Modern glassmorphism efektleri
+- Animasyonlu 3D arka plan
+- Smooth transitions ve hover efektleri
+- Responsive ve mobile-friendly
+- Inter font ailesi
+- Gradient renkler ve glow efektleri

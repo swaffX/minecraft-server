@@ -3,100 +3,236 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Minecraft Server Panel</title>
+    <title>Nexora Minecraft Panel</title>
     <link rel="stylesheet" href="/styles.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 </head>
 <body>
+    <!-- Animated Background -->
+    <div class="bg-animation">
+        <div class="cube"></div>
+        <div class="cube"></div>
+        <div class="cube"></div>
+        <div class="cube"></div>
+        <div class="cube"></div>
+    </div>
+
     <div id="app">
         <!-- Login Screen -->
-        <div id="login-screen" class="login-container">
-            <div class="login-box">
-                <h1>🎮 Minecraft Panel</h1>
-                <form id="login-form">
-                    <input type="text" id="username" placeholder="Kullanıcı Adı" required>
-                    <input type="password" id="password" placeholder="Şifre" required>
-                    <button type="submit">Giriş Yap</button>
-                </form>
-                <div id="login-error" class="error"></div>
+        <div id="login-screen" class="login-screen">
+            <div class="login-container">
+                <div class="login-logo">
+                    <div class="logo-icon">🎮</div>
+                    <h1>Nexora Minecraft</h1>
+                    <p>Sunucu Yönetim Paneli</p>
+                </div>
+                <button id="discord-login-btn" class="discord-btn">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M20.317 4.37a19.791 19.791 0 0 0-4.885-1.515a.074.074 0 0 0-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 0 0-5.487 0a12.64 12.64 0 0 0-.617-1.25a.077.077 0 0 0-.079-.037A19.736 19.736 0 0 0 3.677 4.37a.07.07 0 0 0-.032.027C.533 9.046-.32 13.58.099 18.057a.082.082 0 0 0 .031.057a19.9 19.9 0 0 0 5.993 3.03a.078.078 0 0 0 .084-.028a14.09 14.09 0 0 0 1.226-1.994a.076.076 0 0 0-.041-.106a13.107 13.107 0 0 1-1.872-.892a.077.077 0 0 1-.008-.128a10.2 10.2 0 0 0 .372-.292a.074.074 0 0 1 .077-.01c3.928 1.793 8.18 1.793 12.062 0a.074.074 0 0 1 .078.01c.12.098.246.198.373.292a.077.077 0 0 1-.006.127a12.299 12.299 0 0 1-1.873.892a.077.077 0 0 0-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 0 0 .084.028a19.839 19.839 0 0 0 6.002-3.03a.077.077 0 0 0 .032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 0 0-.031-.03zM8.02 15.33c-1.183 0-2.157-1.085-2.157-2.419c0-1.333.956-2.419 2.157-2.419c1.21 0 2.176 1.096 2.157 2.42c0 1.333-.956 2.418-2.157 2.418zm7.975 0c-1.183 0-2.157-1.085-2.157-2.419c0-1.333.955-2.419 2.157-2.419c1.21 0 2.176 1.096 2.157 2.42c0 1.333-.946 2.418-2.157 2.418z"/>
+                    </svg>
+                    Discord ile Giriş Yap
+                </button>
+                <div id="login-error" class="error-message"></div>
             </div>
         </div>
 
         <!-- Dashboard -->
         <div id="dashboard" class="dashboard" style="display: none;">
+            <!-- Navbar -->
             <nav class="navbar">
-                <h1>🎮 Minecraft Server Panel</h1>
-                <button id="logout-btn" class="btn-logout">Çıkış</button>
+                <div class="navbar-brand">
+                    <div class="brand-icon">🎮</div>
+                    <span>Nexora Panel</span>
+                </div>
+                <div class="navbar-user">
+                    <img id="user-avatar" class="user-avatar" src="" alt="Avatar">
+                    <span id="user-name" class="user-name"></span>
+                    <button id="logout-btn" class="logout-btn">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
+                            <polyline points="16 17 21 12 16 7"></polyline>
+                            <line x1="21" y1="12" x2="9" y2="12"></line>
+                        </svg>
+                    </button>
+                </div>
             </nav>
 
-            <div class="container">
-                <!-- Server Status -->
-                <div class="card status-card">
-                    <h2>Sunucu Durumu</h2>
-                    <div class="status-grid">
-                        <div class="status-item">
-                            <span class="status-label">Durum</span>
-                            <span id="server-status" class="status-value">Kontrol ediliyor...</span>
+            <!-- Main Content -->
+            <div class="main-content">
+                <!-- Stats Grid -->
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-icon status-icon">
+                            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <circle cx="12" cy="12" r="10"></circle>
+                                <polyline points="12 6 12 12 16 14"></polyline>
+                            </svg>
                         </div>
-                        <div class="status-item">
-                            <span class="status-label">Oyuncular</span>
-                            <span id="player-count" class="status-value">-/-</span>
+                        <div class="stat-content">
+                            <div class="stat-label">Sunucu Durumu</div>
+                            <div id="server-status" class="stat-value">Kontrol ediliyor...</div>
                         </div>
-                        <div class="status-item">
-                            <span class="status-label">Ping</span>
-                            <span id="server-ping" class="status-value">- ms</span>
+                    </div>
+
+                    <div class="stat-card">
+                        <div class="stat-icon players-icon">
+                            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                                <circle cx="9" cy="7" r="4"></circle>
+                                <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+                                <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+                            </svg>
                         </div>
-                        <div class="status-item">
-                            <span class="status-label">Versiyon</span>
-                            <span id="server-version" class="status-value">-</span>
+                        <div class="stat-content">
+                            <div class="stat-label">Oyuncular</div>
+                            <div id="player-count" class="stat-value">-/-</div>
+                        </div>
+                    </div>
+
+                    <div class="stat-card">
+                        <div class="stat-icon ping-icon">
+                            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline>
+                            </svg>
+                        </div>
+                        <div class="stat-content">
+                            <div class="stat-label">Ping</div>
+                            <div id="server-ping" class="stat-value">- ms</div>
+                        </div>
+                    </div>
+
+                    <div class="stat-card">
+                        <div class="stat-icon version-icon">
+                            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+                                <line x1="9" y1="9" x2="15" y2="15"></line>
+                                <line x1="15" y1="9" x2="9" y2="15"></line>
+                            </svg>
+                        </div>
+                        <div class="stat-content">
+                            <div class="stat-label">Versiyon</div>
+                            <div id="server-version" class="stat-value">-</div>
                         </div>
                     </div>
                 </div>
 
-                <!-- Server Controls -->
-                <div class="card controls-card">
-                    <h2>Sunucu Kontrolleri</h2>
-                    <div class="button-group">
-                        <button id="start-btn" class="btn btn-success">▶ Başlat</button>
-                        <button id="restart-btn" class="btn btn-warning">🔄 Yeniden Başlat</button>
-                        <button id="stop-btn" class="btn btn-danger">⏹ Durdur</button>
-                    </div>
-                </div>
-
-                <!-- System Info -->
-                <div class="card system-card">
-                    <h2>Sistem Bilgileri</h2>
-                    <div class="system-grid">
-                        <div class="system-item">
-                            <span class="system-label">RAM Kullanımı</span>
-                            <div class="progress-bar">
-                                <div id="ram-progress" class="progress-fill"></div>
+                <!-- Controls & System -->
+                <div class="two-col-grid">
+                    <!-- Server Controls -->
+                    <div class="glass-card">
+                        <div class="card-header">
+                            <h2>Sunucu Kontrolleri</h2>
+                        </div>
+                        <div class="card-body">
+                            <div class="control-buttons">
+                                <button id="start-btn" class="control-btn start-btn">
+                                    <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                                        <polygon points="5 3 19 12 5 21 5 3"></polygon>
+                                    </svg>
+                                    Başlat
+                                </button>
+                                <button id="restart-btn" class="control-btn restart-btn">
+                                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <polyline points="23 4 23 10 17 10"></polyline>
+                                        <polyline points="1 20 1 14 7 14"></polyline>
+                                        <path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"></path>
+                                    </svg>
+                                    Yeniden Başlat
+                                </button>
+                                <button id="stop-btn" class="control-btn stop-btn">
+                                    <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                                        <rect x="6" y="6" width="12" height="12"></rect>
+                                    </svg>
+                                    Durdur
+                                </button>
                             </div>
-                            <span id="ram-text" class="system-value">-</span>
                         </div>
-                        <div class="system-item">
-                            <span class="system-label">Disk Kullanımı</span>
-                            <span id="disk-usage" class="system-value">-</span>
+                    </div>
+
+                    <!-- System Info -->
+                    <div class="glass-card">
+                        <div class="card-header">
+                            <h2>Sistem Bilgileri</h2>
+                        </div>
+                        <div class="card-body">
+                            <div class="system-info">
+                                <div class="system-item">
+                                    <div class="system-label">
+                                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                            <rect x="2" y="7" width="20" height="14" rx="2" ry="2"></rect>
+                                            <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path>
+                                        </svg>
+                                        RAM Kullanımı
+                                    </div>
+                                    <div class="progress-bar">
+                                        <div id="ram-progress" class="progress-fill"></div>
+                                    </div>
+                                    <div id="ram-text" class="system-value">-</div>
+                                </div>
+                                <div class="system-item">
+                                    <div class="system-label">
+                                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                            <circle cx="12" cy="12" r="10"></circle>
+                                            <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path>
+                                        </svg>
+                                        Disk Kullanımı
+                                    </div>
+                                    <div id="disk-usage" class="system-value">-</div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
 
-                <!-- Players List -->
-                <div class="card players-card">
-                    <h2>Çevrimiçi Oyuncular</h2>
-                    <div id="players-list" class="players-list">
-                        <p class="empty-state">Oyuncu yok</p>
+                <!-- Players & Logs -->
+                <div class="two-col-grid">
+                    <!-- Players -->
+                    <div class="glass-card">
+                        <div class="card-header">
+                            <h2>Çevrimiçi Oyuncular</h2>
+                        </div>
+                        <div class="card-body">
+                            <div id="players-list" class="players-list">
+                                <div class="empty-state">
+                                    <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                                        <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                                        <circle cx="9" cy="7" r="4"></circle>
+                                        <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+                                        <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+                                    </svg>
+                                    <p>Oyuncu yok</p>
+                                </div>
+                            </div>
+                        </div>
                     </div>
-                </div>
 
-                <!-- Logs -->
-                <div class="card logs-card">
-                    <h2>Sunucu Logları</h2>
-                    <div class="logs-controls">
-                        <button id="refresh-logs" class="btn btn-small">🔄 Yenile</button>
-                        <button id="clear-logs" class="btn btn-small">🗑 Temizle</button>
-                    </div>
-                    <div id="logs-container" class="logs-container">
-                        <pre id="logs-content">Loglar yükleniyor...</pre>
+                    <!-- Logs -->
+                    <div class="glass-card logs-card">
+                        <div class="card-header">
+                            <h2>Sunucu Logları</h2>
+                            <div class="logs-actions">
+                                <button id="refresh-logs" class="icon-btn" title="Yenile">
+                                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <polyline points="23 4 23 10 17 10"></polyline>
+                                        <polyline points="1 20 1 14 7 14"></polyline>
+                                        <path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"></path>
+                                    </svg>
+                                </button>
+                                <button id="clear-logs" class="icon-btn" title="Temizle">
+                                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <polyline points="3 6 5 6 21 6"></polyline>
+                                        <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+                                    </svg>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <div id="logs-container" class="logs-container">
+                                <pre id="logs-content">Loglar yükleniyor...</pre>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
