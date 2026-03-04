@@ -168,6 +168,77 @@ app.post('/api/server/start', requireAuth, (req, res) => {
     });
 });
 
+app.post('/api/player/kick', requireAuth, (req, res) => {
+    const { player } = req.body;
+    if (!player) {
+        return res.status(400).json({ error: 'Oyuncu adı gerekli' });
+    }
+    
+    exec(`screen -S minecraft -p 0 -X stuff "kick ${player}^M"`, (error) => {
+        if (error) {
+            return res.status(500).json({ error: 'Kick başarısız' });
+        }
+        res.json({ success: true, message: `${player} sunucudan atıldı` });
+    });
+});
+
+app.post('/api/player/ban', requireAuth, (req, res) => {
+    const { player, reason } = req.body;
+    if (!player) {
+        return res.status(400).json({ error: 'Oyuncu adı gerekli' });
+    }
+    
+    const banCommand = reason ? `ban ${player} ${reason}` : `ban ${player}`;
+    exec(`screen -S minecraft -p 0 -X stuff "${banCommand}^M"`, (error) => {
+        if (error) {
+            return res.status(500).json({ error: 'Ban başarısız' });
+        }
+        res.json({ success: true, message: `${player} banlandı` });
+    });
+});
+
+app.post('/api/player/op', requireAuth, (req, res) => {
+    const { player } = req.body;
+    if (!player) {
+        return res.status(400).json({ error: 'Oyuncu adı gerekli' });
+    }
+    
+    exec(`screen -S minecraft -p 0 -X stuff "op ${player}^M"`, (error) => {
+        if (error) {
+            return res.status(500).json({ error: 'OP verme başarısız' });
+        }
+        res.json({ success: true, message: `${player} OP yapıldı` });
+    });
+});
+
+app.post('/api/player/deop', requireAuth, (req, res) => {
+    const { player } = req.body;
+    if (!player) {
+        return res.status(400).json({ error: 'Oyuncu adı gerekli' });
+    }
+    
+    exec(`screen -S minecraft -p 0 -X stuff "deop ${player}^M"`, (error) => {
+        if (error) {
+            return res.status(500).json({ error: 'DEOP başarısız' });
+        }
+        res.json({ success: true, message: `${player} OP'liği alındı` });
+    });
+});
+
+app.post('/api/command', requireAuth, (req, res) => {
+    const { command } = req.body;
+    if (!command) {
+        return res.status(400).json({ error: 'Komut gerekli' });
+    }
+    
+    exec(`screen -S minecraft -p 0 -X stuff "${command}^M"`, (error) => {
+        if (error) {
+            return res.status(500).json({ error: 'Komut çalıştırılamadı' });
+        }
+        res.json({ success: true, message: 'Komut gönderildi' });
+    });
+});
+
 app.get('/api/system', requireAuth, (req, res) => {
     exec('free -m && df -h / && uptime', (error, stdout) => {
         if (error) {

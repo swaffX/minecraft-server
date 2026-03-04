@@ -1,6 +1,8 @@
 // State
 let ws = null;
 let statusInterval = null;
+let selectedPlayer = null;
+let serverOnline = false;
 
 // Elements
 const loginScreen = document.getElementById('login-screen');
@@ -82,6 +84,38 @@ function initDashboard() {
     document.getElementById('clear-logs').addEventListener('click', () => {
         document.getElementById('logs-content').textContent = '';
     });
+    
+    // Console command handler
+    document.getElementById('send-command').addEventListener('click', sendCommand);
+    document.getElementById('console-command').addEventListener('keypress', (e) => {
+        if (e.key === 'Enter') {
+            sendCommand();
+        }
+    });
+    
+    // Modal handlers
+    const modal = document.getElementById('player-modal');
+    const closeBtn = modal.querySelector('.modal-close');
+    
+    closeBtn.addEventListener('click', () => {
+        modal.classList.remove('show');
+        selectedPlayer = null;
+    });
+    
+    modal.addEventListener('click', (e) => {
+        if (e.target === modal) {
+            modal.classList.remove('show');
+            selectedPlayer = null;
+        }
+    });
+    
+    // Player action buttons
+    document.querySelectorAll('.modal-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+            const action = btn.dataset.action;
+            handlePlayerAction(action);
+        });
+    });
 }
 
 async function updateStatus() {
@@ -95,6 +129,9 @@ async function updateStatus() {
         const versionEl = document.getElementById('server-version');
         const playersListEl = document.getElementById('players-list');
         
+        serverOnline = data.online;
+        updateButtonStates();
+        
         if (data.online) {
             statusEl.textContent = '🟢 Çevrimiçi';
             statusEl.className = 'stat-value status-online';
@@ -105,13 +142,21 @@ async function updateStatus() {
             // Players list
             if (data.players.list && data.players.list.length > 0) {
                 playersListEl.innerHTML = data.players.list.map(player => `
-                    <div class="player-item">
+                    <div class="player-item" data-player="${player.name}">
                         <img src="https://mc-heads.net/avatar/${player.name}/40" 
                              alt="${player.name}" 
                              class="player-avatar">
                         <span>${player.name}</span>
                     </div>
                 `).join('');
+                
+                // Add click handlers to player items
+                document.querySelectorAll('.player-item').forEach(item => {
+                    item.addEventListener('click', () => {
+                        const playerName = item.dataset.player;
+                        openPlayerModal(playerName);
+                    });
+                });
             } else if (data.players.online > 0) {
                 playersListEl.innerHTML = `
                     <div class="empty-state">
@@ -156,6 +201,8 @@ async function updateStatus() {
         }
     } catch (error) {
         console.error('Status update error:', error);
+        serverOnline = false;
+        updateButtonStates();
     }
 }
 
@@ -246,3 +293,105 @@ function connectWebSocket() {
         setTimeout(connectWebSocket, 5000);
     };
 }
+
+// Button state management
+function updateButtonStates() {
+    const startBtn = document.getElementById('start-btn');
+    const stopBtn = document.getElementById('stop-btn');
+    const restartBtn = document.getElementById('restart-btn');
+    
+    if (serverOnline) {
+        startBtn.disabled = true;
+        stopBtn.disabled = false;
+        restartBtn.disabled = false;
+    } else {
+        startBtn.disabled = false;
+        stopBtn.disabled = true;
+        restartBtn.disabled = true;
+    }
+}
+
+// Player modal
+function openPlayerModal(playerName) {
+    selectedPlayer = playerName;
+    const modal = document.getElementById('player-modal');
+    const modalTitle = document.getElementById('modal-player-name');
+    
+    modalTitle.textContent = `${playerName} - Oyuncu İşlemleri`;
+    modal.classList.add('show');
+}
+
+// Player actions
+async function handlePlayerAction(action) {
+    if (!selectedPlayer) return;
+    
+    const actions = {
+        kick: { endpoint: '/api/player/kick', message: 'atılıyor' },
+        ban: { endpoint: '/api/player/ban', message: 'banlanıyor' },
+        op: { endpoint: '/api/player/op', message: 'OP yapılıyor' },
+        deop: { endpoint: '/api/player/deop', message: 'OP\'liği alınıyor' }
+    };
+    
+    const actionData = actions[action];
+    if (!actionData) return;
+    
+    const confirmMessages = {
+        kick: 'sunucudan atmak',
+        ban: 'banlamak',
+        op: 'OP yapmak',
+        deop: 'OP\'liğini almak'
+    };
+    
+    if (!confirm(`${selectedPlayer} oyuncusunu ${confirmMessages[action]} istediğinize emin misiniz?`)) {
+        return;
+    }
+    
+    try {
+        const response = await fetch(actionData.endpoint, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ player: selectedPlayer })
+        });
+        
+        const data = await response.json();
+        
+        if (data.success) {
+            showNotification(data.message, 'success');
+            document.getElementById('player-modal').classList.remove('show');
+            selectedPlayer = null;
+            setTimeout(updateStatus, 1000);
+        } else {
+            showNotification('Hata: ' + data.error, 'error');
+        }
+    } catch (error) {
+        showNotification('İşlem başarısız!', 'error');
+    }
+}
+
+// Console command
+async function sendCommand() {
+    const input = document.getElementById('console-command');
+    const command = input.value.trim();
+    
+    if (!command) return;
+    
+    try {
+        const response = await fetch('/api/command', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ command })
+        });
+        
+        const data = await response.json();
+        
+        if (data.success) {
+            showNotification('Komut gönderildi!', 'success');
+            input.value = '';
+        } else {
+            showNotification('Hata: ' + data.error, 'error');
+        }
+    } catch (error) {
+        showNotification('Komut gönderilemedi!', 'error');
+    }
+}
+
