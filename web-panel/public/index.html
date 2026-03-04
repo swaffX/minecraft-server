@@ -118,12 +118,12 @@
                     </div>
                 </div>
 
-                <!-- Controls & System -->
-                <div class="two-col-grid">
+                <!-- Three Column Grid -->
+                <div class="three-col-grid">
                     <!-- Server Controls -->
                     <div class="glass-card">
                         <div class="card-header">
-                            <h2>Sunucu Kontrolleri</h2>
+                            <h2>⚙️ Sunucu Kontrolleri</h2>
                         </div>
                         <div class="card-body">
                             <div class="control-buttons">
@@ -154,7 +154,7 @@
                     <!-- System Info -->
                     <div class="glass-card">
                         <div class="card-header">
-                            <h2>Sistem Bilgileri</h2>
+                            <h2>💻 Sistem Bilgileri</h2>
                         </div>
                         <div class="card-body">
                             <div class="system-info">
@@ -184,34 +184,11 @@
                             </div>
                         </div>
                     </div>
-                </div>
-
-                <!-- Players & Console -->
-                <div class="two-col-grid">
-                    <!-- Players -->
-                    <div class="glass-card">
-                        <div class="card-header">
-                            <h2>Çevrimiçi Oyuncular</h2>
-                        </div>
-                        <div class="card-body">
-                            <div id="players-list" class="players-list">
-                                <div class="empty-state">
-                                    <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-                                        <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
-                                        <circle cx="9" cy="7" r="4"></circle>
-                                        <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
-                                        <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
-                                    </svg>
-                                    <p>Oyuncu yok</p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
 
                     <!-- Console -->
                     <div class="glass-card">
                         <div class="card-header">
-                            <h2>Konsol Komutu</h2>
+                            <h2>⌨️ Konsol Komutu</h2>
                         </div>
                         <div class="card-body">
                             <div class="console-input">
@@ -221,8 +198,27 @@
                                         <line x1="22" y1="2" x2="11" y2="13"></line>
                                         <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
                                     </svg>
-                                    Gönder
                                 </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Players -->
+                <div class="glass-card">
+                    <div class="card-header">
+                        <h2>👥 Çevrimiçi Oyuncular</h2>
+                    </div>
+                    <div class="card-body">
+                        <div id="players-list" class="players-grid">
+                            <div class="empty-state">
+                                <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                                    <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                                    <circle cx="9" cy="7" r="4"></circle>
+                                    <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+                                    <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+                                </svg>
+                                <p>Oyuncu yok</p>
                             </div>
                         </div>
                     </div>
@@ -231,7 +227,7 @@
                 <!-- Logs -->
                 <div class="glass-card logs-card">
                     <div class="card-header">
-                        <h2>Sunucu Logları</h2>
+                        <h2>📋 Sunucu Logları</h2>
                         <div class="logs-actions">
                             <button id="refresh-logs" class="icon-btn" title="Yenile">
                                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -266,35 +262,49 @@
                 <button class="modal-close">&times;</button>
             </div>
             <div class="modal-body">
-                <button class="modal-btn kick-btn" data-action="kick">
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
-                        <circle cx="8.5" cy="7" r="4"></circle>
-                        <line x1="18" y1="8" x2="23" y2="13"></line>
-                        <line x1="23" y1="8" x2="18" y2="13"></line>
-                    </svg>
-                    Sunucudan At
-                </button>
-                <button class="modal-btn ban-btn" data-action="ban">
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <circle cx="12" cy="12" r="10"></circle>
-                        <line x1="4.93" y1="4.93" x2="19.07" y2="19.07"></line>
-                    </svg>
-                    Banla
-                </button>
-                <button class="modal-btn op-btn" data-action="op">
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
-                    </svg>
-                    OP Ver
-                </button>
-                <button class="modal-btn deop-btn" data-action="deop">
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
-                        <line x1="1" y1="1" x2="23" y2="23"></line>
-                    </svg>
-                    OP Al
-                </button>
+                <div class="modal-actions-grid">
+                    <button class="modal-btn kick-btn" data-action="kick">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                            <circle cx="8.5" cy="7" r="4"></circle>
+                            <line x1="18" y1="8" x2="23" y2="13"></line>
+                            <line x1="23" y1="8" x2="18" y2="13"></line>
+                        </svg>
+                        <div>
+                            <div class="btn-title">Sunucudan At</div>
+                            <div class="btn-desc">Oyuncuyu sunucudan çıkar</div>
+                        </div>
+                    </button>
+                    <button class="modal-btn ban-btn" data-action="ban">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="12" cy="12" r="10"></circle>
+                            <line x1="4.93" y1="4.93" x2="19.07" y2="19.07"></line>
+                        </svg>
+                        <div>
+                            <div class="btn-title">Banla</div>
+                            <div class="btn-desc">Kalıcı olarak yasakla</div>
+                        </div>
+                    </button>
+                    <button class="modal-btn op-btn" data-action="op">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
+                        </svg>
+                        <div>
+                            <div class="btn-title">OP Ver</div>
+                            <div class="btn-desc">Yönetici yetkisi ver</div>
+                        </div>
+                    </button>
+                    <button class="modal-btn deop-btn" data-action="deop">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
+                            <line x1="1" y1="1" x2="23" y2="23"></line>
+                        </svg>
+                        <div>
+                            <div class="btn-title">OP Al</div>
+                            <div class="btn-desc">Yönetici yetkisini kaldır</div>
+                        </div>
+                    </button>
+                </div>
             </div>
         </div>
     </div>

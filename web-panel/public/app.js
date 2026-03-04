@@ -143,7 +143,7 @@ async function updateStatus() {
             if (data.players.list && data.players.list.length > 0) {
                 playersListEl.innerHTML = data.players.list.map(player => `
                     <div class="player-item" data-player="${player.name}">
-                        <img src="https://mc-heads.net/avatar/${player.name}/40" 
+                        <img src="https://mc-heads.net/avatar/${player.name}/64" 
                              alt="${player.name}" 
                              class="player-avatar">
                         <span>${player.name}</span>

@@ -396,6 +396,14 @@ body {
   margin-bottom: 2rem;
 }
 
+/* Three Column Grid */
+.three-col-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 1.5rem;
+  margin-bottom: 2rem;
+}
+
 /* Glass Card */
 .glass-card {
   background: var(--glass);
@@ -583,28 +591,50 @@ body {
   gap: 0.75rem;
 }
 
+.players-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 1rem;
+  max-height: 400px;
+  overflow-y: auto;
+}
+
 .player-item {
-  padding: 1rem;
+  padding: 1.25rem;
   background: rgba(255, 255, 255, 0.03);
   border: 1px solid rgba(255, 255, 255, 0.05);
-  border-radius: 12px;
+  border-radius: 15px;
   display: flex;
+  flex-direction: column;
   align-items: center;
-  gap: 1rem;
-  transition: all 0.3s;
+  gap: 0.75rem;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  cursor: pointer;
+  text-align: center;
 }
 
 .player-item:hover {
-  background: rgba(255, 255, 255, 0.05);
-  border-color: rgba(255, 255, 255, 0.1);
-  transform: translateX(5px);
+  background: rgba(255, 255, 255, 0.08);
+  border-color: var(--primary);
+  transform: translateY(-5px);
+  box-shadow: 0 10px 30px rgba(0, 217, 255, 0.2);
+}
+
+.player-item:active {
+  transform: translateY(-3px) scale(0.98);
 }
 
 .player-avatar {
-  width: 40px;
-  height: 40px;
-  border-radius: 8px;
-  border: 2px solid var(--primary);
+  width: 64px;
+  height: 64px;
+  border-radius: 12px;
+  border: 3px solid var(--primary);
+  box-shadow: 0 5px 20px rgba(0, 217, 255, 0.3);
+}
+
+.player-item span {
+  font-weight: 600;
+  font-size: 0.95rem;
 }
 
 .empty-state {
@@ -716,15 +746,15 @@ body {
   background: var(--glass);
   backdrop-filter: blur(20px) saturate(180%);
   border: 1px solid var(--glass-border);
-  border-radius: 20px;
-  max-width: 500px;
+  border-radius: 25px;
+  max-width: 600px;
   width: 90%;
   box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
   animation: slideUp 0.3s;
 }
 
 .modal-header {
-  padding: 1.5rem 2rem;
+  padding: 2rem 2.5rem;
   border-bottom: 1px solid var(--glass-border);
   display: flex;
   justify-content: space-between;
@@ -732,7 +762,7 @@ body {
 }
 
 .modal-header h3 {
-  font-size: 1.25rem;
+  font-size: 1.5rem;
   font-weight: 700;
   background: linear-gradient(135deg, var(--primary), var(--secondary));
   -webkit-background-clip: text;
@@ -744,11 +774,12 @@ body {
   background: none;
   border: none;
   color: var(--text);
-  font-size: 1.5rem;
+  font-size: 2rem;
   cursor: pointer;
   padding: 0.25rem 0.5rem;
   transition: all 0.3s;
-  border-radius: 8px;
+  border-radius: 10px;
+  line-height: 1;
 }
 
 .modal-close:hover {
@@ -757,64 +788,88 @@ body {
 }
 
 .modal-body {
-  padding: 2rem;
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
+  padding: 2.5rem;
+}
+
+.modal-actions-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1.25rem;
 }
 
 .modal-btn {
-  padding: 1rem 1.5rem;
+  padding: 1.5rem;
   border: none;
-  border-radius: 12px;
+  border-radius: 15px;
   font-size: 1rem;
   font-weight: 600;
   cursor: pointer;
   display: flex;
+  flex-direction: column;
   align-items: center;
-  gap: 0.75rem;
+  gap: 1rem;
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   color: white;
+  text-align: center;
+}
+
+.modal-btn svg {
+  flex-shrink: 0;
 }
 
 .modal-btn:hover {
+  transform: translateY(-5px);
+}
+
+.modal-btn:active {
   transform: translateY(-2px);
+}
+
+.btn-title {
+  font-size: 1.1rem;
+  font-weight: 700;
+}
+
+.btn-desc {
+  font-size: 0.85rem;
+  opacity: 0.9;
+  font-weight: 400;
 }
 
 .kick-btn {
   background: linear-gradient(135deg, var(--warning), #d97706);
-  box-shadow: 0 5px 20px rgba(245, 158, 11, 0.3);
+  box-shadow: 0 8px 25px rgba(245, 158, 11, 0.3);
 }
 
 .kick-btn:hover {
-  box-shadow: 0 8px 25px rgba(245, 158, 11, 0.4);
+  box-shadow: 0 12px 35px rgba(245, 158, 11, 0.4);
 }
 
 .ban-btn {
   background: linear-gradient(135deg, var(--danger), #dc2626);
-  box-shadow: 0 5px 20px rgba(239, 68, 68, 0.3);
+  box-shadow: 0 8px 25px rgba(239, 68, 68, 0.3);
 }
 
 .ban-btn:hover {
-  box-shadow: 0 8px 25px rgba(239, 68, 68, 0.4);
+  box-shadow: 0 12px 35px rgba(239, 68, 68, 0.4);
 }
 
 .op-btn {
   background: linear-gradient(135deg, var(--success), #059669);
-  box-shadow: 0 5px 20px rgba(16, 185, 129, 0.3);
+  box-shadow: 0 8px 25px rgba(16, 185, 129, 0.3);
 }
 
 .op-btn:hover {
-  box-shadow: 0 8px 25px rgba(16, 185, 129, 0.4);
+  box-shadow: 0 12px 35px rgba(16, 185, 129, 0.4);
 }
 
 .deop-btn {
   background: linear-gradient(135deg, var(--secondary), #6d28d9);
-  box-shadow: 0 5px 20px rgba(124, 58, 237, 0.3);
+  box-shadow: 0 8px 25px rgba(124, 58, 237, 0.3);
 }
 
 .deop-btn:hover {
-  box-shadow: 0 8px 25px rgba(124, 58, 237, 0.4);
+  box-shadow: 0 12px 35px rgba(124, 58, 237, 0.4);
 }
 
 /* Console Input */
@@ -848,7 +903,7 @@ body {
 }
 
 .send-btn {
-  padding: 1rem 1.5rem;
+  padding: 1rem 1.25rem;
   background: linear-gradient(135deg, var(--primary), var(--secondary));
   border: none;
   border-radius: 12px;
@@ -857,9 +912,10 @@ body {
   cursor: pointer;
   display: flex;
   align-items: center;
-  gap: 0.5rem;
+  justify-content: center;
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   box-shadow: 0 5px 20px rgba(0, 217, 255, 0.3);
+  min-width: 60px;
 }
 
 .send-btn:hover {
@@ -877,7 +933,7 @@ body {
 }
 
 .player-item:active {
-  transform: translateX(5px) scale(0.98);
+  transform: translateY(-3px) scale(0.98);
 }
 
 /* Button Disabled State */
@@ -898,7 +954,11 @@ body {
 
 /* Responsive */
 @media (max-width: 1024px) {
-  .two-col-grid {
+  .two-col-grid, .three-col-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .modal-actions-grid {
     grid-template-columns: 1fr;
   }
 }
@@ -932,5 +992,9 @@ body {
   
   .console-input {
     flex-direction: column;
+  }
+  
+  .players-grid {
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
   }
 }
