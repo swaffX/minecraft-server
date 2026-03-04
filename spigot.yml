@@ -25,8 +25,8 @@ settings:
   bungeecord: false
   player-shuffle: 0
   user-cache-size: 1000
-  moved-wrongly-threshold: 0.125
-  moved-too-quickly-multiplier: 20.0
+  moved-wrongly-threshold: 1.0
+  moved-too-quickly-multiplier: 100.0
   timeout-time: 60
   restart-on-crash: true
   restart-script: ./start.sh
@@ -160,8 +160,8 @@ world-settings:
       other-multiplier: 0.0
     max-tnt-per-tick: 100
     max-tick-time:
-      tile: 50
-      entity: 50
+      tile: 1000
+      entity: 1000
     verbose: false
 config-version: 12
 commands:

@@ -39,15 +39,15 @@ chunk-loading-advanced:
   player-max-concurrent-chunk-generates: 0
   player-max-concurrent-chunk-loads: 0
 chunk-loading-basic:
-  player-max-chunk-generate-rate: 10.0
-  player-max-chunk-load-rate: 10.0
-  player-max-chunk-send-rate: 10.0
+  player-max-chunk-generate-rate: -1.0
+  player-max-chunk-load-rate: -1.0
+  player-max-chunk-send-rate: -1.0
 chunk-system:
   io-threads: -1
   worker-threads: -1
 collisions:
   enable-player-collisions: true
-  send-full-pos-for-hard-colliding-entities: true
+  send-full-pos-for-hard-colliding-entities: false
 commands:
   ride-command-allow-player-as-vehicle: false
   suggest-player-names-when-null-tab-completions: true
@@ -82,7 +82,7 @@ misc:
   chat-threads:
     chat-executor-core-size: -1
     chat-executor-max-size: -1
-  client-interaction-leniency-distance: default
+  client-interaction-leniency-distance: 1.0
   compression-level: default
   enable-nether: true
   fix-far-end-terrain-generation: true

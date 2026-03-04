@@ -51,8 +51,8 @@ anticheat:
     update-radius: 2
     use-permission: false
 chunks:
-  auto-save-interval: 6000
-  delay-chunk-unloads-by: 5s
+  auto-save-interval: default
+  delay-chunk-unloads-by: 10s
   entity-per-chunk-save-limit:
     arrow: -1
     ender_pearl: -1
@@ -63,7 +63,7 @@ chunks:
   fixed-chunk-inhabited-time: -1
   flush-regions-on-save: false
   max-auto-save-chunks-per-tick: 24
-  prevent-moving-into-unloaded-chunks: true
+  prevent-moving-into-unloaded-chunks: false
 collisions:
   allow-player-cramming-damage: false
   allow-vehicle-collisions: true
@@ -263,7 +263,7 @@ fixes:
   falling-block-height-nerf: disabled
   fix-items-merging-through-walls: false
   prevent-tnt-from-moving-in-water: false
-  split-overstacked-loot: true
+  split-overstacked-loot: false
   tnt-entity-height-nerf: disabled
 hopper:
   cooldown-when-full: true
