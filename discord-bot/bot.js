@@ -33,6 +33,7 @@ async function updateServerInfo() {
         const embed = new EmbedBuilder()
             .setColor('#00FF00')
             .setTitle('🎮 Minecraft Sunucu Bilgileri')
+            .setThumbnail('https://cdn.discordapp.com/attachments/531892263652032522/1464235225818075147/standard_2.gif')
             .addFields(
                 { name: '📊 Oyuncu Sayısı', value: `${response.players.online}/${response.players.max}`, inline: true },
                 { name: '🌍 Sunucu IP', value: `\`${CONFIG.MC_SERVER_IP}:${CONFIG.MC_SERVER_PORT}\``, inline: true },
@@ -57,6 +58,7 @@ async function updateServerInfo() {
         const embed = new EmbedBuilder()
             .setColor('#FF0000')
             .setTitle('🎮 Minecraft Sunucu Bilgileri')
+            .setThumbnail('https://cdn.discordapp.com/attachments/531892263652032522/1464235225818075147/standard_2.gif')
             .addFields(
                 { name: '🔴 Durum', value: 'Çevrimdışı', inline: true },
                 { name: '🌍 Sunucu IP', value: `\`${CONFIG.MC_SERVER_IP}:${CONFIG.MC_SERVER_PORT}\``, inline: true }
@@ -135,6 +137,16 @@ async function checkLogs() {
 
 client.once('ready', async () => {
     console.log(`Bot giriş yaptı: ${client.user.tag}`);
+    
+    // Bot durumunu ayarla
+    client.user.setPresence({
+        activities: [{
+            name: 'https://www.twitch.tv/swaffval',
+            type: 1, // 1 = Streaming
+            url: 'https://www.twitch.tv/swaffval'
+        }],
+        status: 'online'
+    });
     
     // İlk güncelleme
     await updateServerInfo();
