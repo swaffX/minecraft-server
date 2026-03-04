@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Minecraft Server Panel</title>
+    <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+    <div id="app">
+        <!-- Login Screen -->
+        <div id="login-screen" class="login-container">
+            <div class="login-box">
+                <h1>🎮 Minecraft Panel</h1>
+                <form id="login-form">
+                    <input type="text" id="username" placeholder="Kullanıcı Adı" required>
+                    <input type="password" id="password" placeholder="Şifre" required>
+                    <button type="submit">Giriş Yap</button>
+                </form>
+                <div id="login-error" class="error"></div>
+            </div>
+        </div>
+
+        <!-- Dashboard -->
+        <div id="dashboard" class="dashboard" style="display: none;">
+            <nav class="navbar">
+                <h1>🎮 Minecraft Server Panel</h1>
+                <button id="logout-btn" class="btn-logout">Çıkış</button>
+            </nav>
+
+            <div class="container">
+                <!-- Server Status -->
+                <div class="card status-card">
+                    <h2>Sunucu Durumu</h2>
+                    <div class="status-grid">
+                        <div class="status-item">
+                            <span class="status-label">Durum</span>
+                            <span id="server-status" class="status-value">Kontrol ediliyor...</span>
+                        </div>
+                        <div class="status-item">
+                            <span class="status-label">Oyuncular</span>
+                            <span id="player-count" class="status-value">-/-</span>
+                        </div>
+                        <div class="status-item">
+                            <span class="status-label">Ping</span>
+                            <span id="server-ping" class="status-value">- ms</span>
+                        </div>
+                        <div class="status-item">
+                            <span class="status-label">Versiyon</span>
+                            <span id="server-version" class="status-value">-</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Server Controls -->
+                <div class="card controls-card">
+                    <h2>Sunucu Kontrolleri</h2>
+                    <div class="button-group">
+                        <button id="start-btn" class="btn btn-success">▶ Başlat</button>
+                        <button id="restart-btn" class="btn btn-warning">🔄 Yeniden Başlat</button>
+                        <button id="stop-btn" class="btn btn-danger">⏹ Durdur</button>
+                    </div>
+                </div>
+
+                <!-- System Info -->
+                <div class="card system-card">
+                    <h2>Sistem Bilgileri</h2>
+                    <div class="system-grid">
+                        <div class="system-item">
+                            <span class="system-label">RAM Kullanımı</span>
+                            <div class="progress-bar">
+                                <div id="ram-progress" class="progress-fill"></div>
+                            </div>
+                            <span id="ram-text" class="system-value">-</span>
+                        </div>
+                        <div class="system-item">
+                            <span class="system-label">Disk Kullanımı</span>
+                            <span id="disk-usage" class="system-value">-</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Players List -->
+                <div class="card players-card">
+                    <h2>Çevrimiçi Oyuncular</h2>
+                    <div id="players-list" class="players-list">
+                        <p class="empty-state">Oyuncu yok</p>
+                    </div>
+                </div>
+
+                <!-- Logs -->
+                <div class="card logs-card">
+                    <h2>Sunucu Logları</h2>
+                    <div class="logs-controls">
+                        <button id="refresh-logs" class="btn btn-small">🔄 Yenile</button>
+                        <button id="clear-logs" class="btn btn-small">🗑 Temizle</button>
+                    </div>
+                    <div id="logs-container" class="logs-container">
+                        <pre id="logs-content">Loglar yükleniyor...</pre>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="/app.js"></script>
+</body>
+</html>
