@@ -33,7 +33,7 @@ async function updateServerInfo() {
         const embed = new EmbedBuilder()
             .setColor('#00FF00')
             .setTitle('🎮 Minecraft Sunucu Bilgileri')
-            .setThumbnail('https://cdn.discordapp.com/attachments/531892263652032522/1464235225818075147/standard_2.gif')
+            .setImage('https://cdn.discordapp.com/attachments/531892263652032522/1464235225818075147/standard_2.gif')
             .addFields(
                 { name: '📊 Oyuncu Sayısı', value: `${response.players.online}/${response.players.max}`, inline: true },
                 { name: '🌍 Sunucu IP', value: `\`${CONFIG.MC_SERVER_IP}:${CONFIG.MC_SERVER_PORT}\``, inline: true },
@@ -58,7 +58,7 @@ async function updateServerInfo() {
         const embed = new EmbedBuilder()
             .setColor('#FF0000')
             .setTitle('🎮 Minecraft Sunucu Bilgileri')
-            .setThumbnail('https://cdn.discordapp.com/attachments/531892263652032522/1464235225818075147/standard_2.gif')
+            .setImage('https://cdn.discordapp.com/attachments/531892263652032522/1464235225818075147/standard_2.gif')
             .addFields(
                 { name: '🔴 Durum', value: 'Çevrimdışı', inline: true },
                 { name: '🌍 Sunucu IP', value: `\`${CONFIG.MC_SERVER_IP}:${CONFIG.MC_SERVER_PORT}\``, inline: true }
