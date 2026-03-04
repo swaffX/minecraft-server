@@ -3,6 +3,7 @@ const session = require('express-session');
 const axios = require('axios');
 const { exec } = require('child_process');
 const { status } = require('minecraft-server-util');
+const { RCON } = require('minecraft-server-util');
 const fs = require('fs');
 const WebSocket = require('ws');
 require('dotenv').config();
@@ -14,12 +15,29 @@ const PORT = process.env.PORT || 3000;
 const CONFIG = {
     MC_SERVER_IP: '194.105.5.37',
     MC_SERVER_PORT: 25565,
+    RCON_PORT: 25575,
+    RCON_PASSWORD: process.env.RCON_PASSWORD || 'changeme',
     LOG_FILE: '/opt/minecraft/logs/latest.log',
     ALLOWED_USER_ID: '315875588906680330',
     DISCORD_CLIENT_ID: process.env.DISCORD_CLIENT_ID,
     DISCORD_CLIENT_SECRET: process.env.DISCORD_CLIENT_SECRET,
     DISCORD_REDIRECT_URI: process.env.DISCORD_REDIRECT_URI || 'http://194.105.5.37:3000/auth/callback'
 };
+
+// RCON Helper
+async function sendRCONCommand(command) {
+    const rcon = new RCON();
+    try {
+        await rcon.connect(CONFIG.MC_SERVER_IP, CONFIG.RCON_PORT);
+        await rcon.login(CONFIG.RCON_PASSWORD);
+        const response = await rcon.execute(command);
+        rcon.close();
+        return { success: true, response };
+    } catch (error) {
+        console.error('RCON Error:', error);
+        return { success: false, error: error.message };
+    }
+}
 
 // Middleware
 app.use(express.json());
@@ -168,75 +186,75 @@ app.post('/api/server/start', requireAuth, (req, res) => {
     });
 });
 
-app.post('/api/player/kick', requireAuth, (req, res) => {
+app.post('/api/player/kick', requireAuth, async (req, res) => {
     const { player } = req.body;
     if (!player) {
         return res.status(400).json({ error: 'Oyuncu adı gerekli' });
     }
     
-    exec(`screen -S minecraft -p 0 -X stuff "kick ${player}^M"`, (error) => {
-        if (error) {
-            return res.status(500).json({ error: 'Kick başarısız' });
-        }
+    const result = await sendRCONCommand(`kick ${player}`);
+    if (result.success) {
         res.json({ success: true, message: `${player} sunucudan atıldı` });
-    });
+    } else {
+        res.status(500).json({ error: 'Kick başarısız: ' + result.error });
+    }
 });
 
-app.post('/api/player/ban', requireAuth, (req, res) => {
+app.post('/api/player/ban', requireAuth, async (req, res) => {
     const { player, reason } = req.body;
     if (!player) {
         return res.status(400).json({ error: 'Oyuncu adı gerekli' });
     }
     
     const banCommand = reason ? `ban ${player} ${reason}` : `ban ${player}`;
-    exec(`screen -S minecraft -p 0 -X stuff "${banCommand}^M"`, (error) => {
-        if (error) {
-            return res.status(500).json({ error: 'Ban başarısız' });
-        }
+    const result = await sendRCONCommand(banCommand);
+    if (result.success) {
         res.json({ success: true, message: `${player} banlandı` });
-    });
+    } else {
+        res.status(500).json({ error: 'Ban başarısız: ' + result.error });
+    }
 });
 
-app.post('/api/player/op', requireAuth, (req, res) => {
+app.post('/api/player/op', requireAuth, async (req, res) => {
     const { player } = req.body;
     if (!player) {
         return res.status(400).json({ error: 'Oyuncu adı gerekli' });
     }
     
-    exec(`screen -S minecraft -p 0 -X stuff "op ${player}^M"`, (error) => {
-        if (error) {
-            return res.status(500).json({ error: 'OP verme başarısız' });
-        }
+    const result = await sendRCONCommand(`op ${player}`);
+    if (result.success) {
         res.json({ success: true, message: `${player} OP yapıldı` });
-    });
+    } else {
+        res.status(500).json({ error: 'OP verme başarısız: ' + result.error });
+    }
 });
 
-app.post('/api/player/deop', requireAuth, (req, res) => {
+app.post('/api/player/deop', requireAuth, async (req, res) => {
     const { player } = req.body;
     if (!player) {
         return res.status(400).json({ error: 'Oyuncu adı gerekli' });
     }
     
-    exec(`screen -S minecraft -p 0 -X stuff "deop ${player}^M"`, (error) => {
-        if (error) {
-            return res.status(500).json({ error: 'DEOP başarısız' });
-        }
+    const result = await sendRCONCommand(`deop ${player}`);
+    if (result.success) {
         res.json({ success: true, message: `${player} OP'liği alındı` });
-    });
+    } else {
+        res.status(500).json({ error: 'DEOP başarısız: ' + result.error });
+    }
 });
 
-app.post('/api/command', requireAuth, (req, res) => {
+app.post('/api/command', requireAuth, async (req, res) => {
     const { command } = req.body;
     if (!command) {
         return res.status(400).json({ error: 'Komut gerekli' });
     }
     
-    exec(`screen -S minecraft -p 0 -X stuff "${command}^M"`, (error) => {
-        if (error) {
-            return res.status(500).json({ error: 'Komut çalıştırılamadı' });
-        }
-        res.json({ success: true, message: 'Komut gönderildi' });
-    });
+    const result = await sendRCONCommand(command);
+    if (result.success) {
+        res.json({ success: true, message: 'Komut gönderildi', response: result.response });
+    } else {
+        res.status(500).json({ error: 'Komut çalıştırılamadı: ' + result.error });
+    }
 });
 
 app.get('/api/system', requireAuth, (req, res) => {

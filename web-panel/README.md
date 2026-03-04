@@ -7,7 +7,8 @@ Ultra modern glassmorphism tasarımlı Minecraft sunucu yönetim paneli.
 - ✅ Discord OAuth2 girişi
 - ✅ Sadece yetkili kullanıcı erişimi
 - ✅ Gerçek zamanlı sunucu durumu
-- ✅ Oyuncu listesi ve avatarları
+- ✅ Oyuncu yönetimi (Kick, Ban, OP, DEOP)
+- ✅ Konsol komutları (RCON)
 - ✅ Sunucu kontrolleri (Başlat/Durdur/Restart)
 - ✅ Canlı log izleme (WebSocket)
 - ✅ Sistem bilgileri (RAM, Disk)
@@ -28,7 +29,22 @@ Ultra modern glassmorphism tasarımlı Minecraft sunucu yönetim paneli.
 
 ## Kurulum
 
-### 1. .env Dosyası Oluştur
+### 1. Minecraft Sunucusunda RCON'u Aktifleştir
+
+`/opt/minecraft/server.properties` dosyasını düzenle:
+
+```properties
+enable-rcon=true
+rcon.port=25575
+rcon.password=güçlü_bir_şifre_buraya
+```
+
+Sunucuyu yeniden başlat:
+```bash
+systemctl restart minecraft
+```
+
+### 2. .env Dosyası Oluştur
 
 ```bash
 cd /opt/minecraft/web-panel
@@ -43,15 +59,16 @@ DISCORD_CLIENT_ID=discord_client_id_buraya
 DISCORD_CLIENT_SECRET=discord_client_secret_buraya
 DISCORD_REDIRECT_URI=http://194.105.5.37:3000/auth/callback
 SESSION_SECRET=random-secret-key-123456
+RCON_PASSWORD=server.properties_deki_rcon_şifresi
 ```
 
-### 2. Bağımlılıkları Kur
+### 3. Bağımlılıkları Kur
 
 ```bash
 npm install
 ```
 
-### 3. Başlat
+### 4. Başlat
 
 ```bash
 npm start
@@ -69,7 +86,7 @@ nano /etc/systemd/system/minecraft-panel.service
 ```ini
 [Unit]
 Description=Minecraft Web Panel
-After=network.target
+After=network.target minecraft.service
 
 [Service]
 Type=simple
@@ -95,6 +112,7 @@ systemctl status minecraft-panel
 
 ```bash
 sudo ufw allow 3000/tcp
+sudo ufw allow 25575/tcp  # RCON portu
 ```
 
 ## Güvenlik
@@ -102,13 +120,23 @@ sudo ufw allow 3000/tcp
 - Discord OAuth2 ile güvenli giriş
 - Sadece belirlenen Discord ID erişebilir
 - Session tabanlı kimlik doğrulama
+- RCON şifresi ile güvenli komut gönderimi
 - HTTPS kullanımı önerilir (Nginx reverse proxy)
 
 ## Tasarım
 
 - Modern glassmorphism efektleri
 - Animasyonlu 3D arka plan
+- Grid layout oyuncu kartları
 - Smooth transitions ve hover efektleri
 - Responsive ve mobile-friendly
 - Inter font ailesi
 - Gradient renkler ve glow efektleri
+
+## Teknolojiler
+
+- Node.js + Express
+- Discord OAuth2
+- Minecraft RCON (minecraft-server-util)
+- WebSocket (canlı loglar)
+- Glassmorphism CSS
