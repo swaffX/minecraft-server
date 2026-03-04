@@ -51,8 +51,8 @@ anticheat:
     update-radius: 2
     use-permission: false
 chunks:
-  auto-save-interval: default
-  delay-chunk-unloads-by: 10s
+  auto-save-interval: 6000
+  delay-chunk-unloads-by: 5s
   entity-per-chunk-save-limit:
     arrow: -1
     ender_pearl: -1
@@ -63,7 +63,7 @@ chunks:
   fixed-chunk-inhabited-time: -1
   flush-regions-on-save: false
   max-auto-save-chunks-per-tick: 24
-  prevent-moving-into-unloaded-chunks: false
+  prevent-moving-into-unloaded-chunks: true
 collisions:
   allow-player-cramming-damage: false
   allow-vehicle-collisions: true
