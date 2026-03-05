@@ -120,8 +120,8 @@ function initDashboard() {
         });
     });
     
-    // Quick command buttons
-    document.querySelectorAll('.quick-btn-compact').forEach(btn => {
+    // Quick command buttons (both compact and simple)
+    document.querySelectorAll('.quick-btn-compact, .quick-btn-simple').forEach(btn => {
         btn.addEventListener('click', () => {
             const action = btn.dataset.action;
             const value = btn.dataset.value;

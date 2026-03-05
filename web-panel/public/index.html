@@ -246,68 +246,71 @@
                     </div>
                 </div>
 
-                <!-- Quick Commands -->
-                <div class="glass-card compact-card">
-                    <div class="card-header">
-                        <h2>⚡ Hızlı Komutlar</h2>
-                    </div>
-                    <div class="card-body compact-body">
-                        <div class="quick-commands-compact">
-                            <div class="quick-group-compact">
-                                <label class="quick-label-compact">⏰ Zaman</label>
-                                <div class="quick-buttons-compact">
-                                    <button class="quick-btn-compact" data-action="time" data-value="day">☀️ Gündüz</button>
-                                    <button class="quick-btn-compact" data-action="time" data-value="night">🌙 Gece</button>
+                <!-- Quick Commands & Settings Row -->
+                <div class="two-col-grid">
+                    <!-- Quick Commands -->
+                    <div class="glass-card">
+                        <div class="card-header">
+                            <h2>⚡ Hızlı Komutlar</h2>
+                        </div>
+                        <div class="card-body">
+                            <div class="quick-section">
+                                <div class="quick-row">
+                                    <span class="quick-label-simple">⏰ Zaman:</span>
+                                    <div class="quick-btns-inline">
+                                        <button class="quick-btn-simple" data-action="time" data-value="day">☀️ Gündüz</button>
+                                        <button class="quick-btn-simple" data-action="time" data-value="night">🌙 Gece</button>
+                                    </div>
                                 </div>
-                            </div>
-                            <div class="quick-group-compact">
-                                <label class="quick-label-compact">🌦️ Hava</label>
-                                <div class="quick-buttons-compact">
-                                    <button class="quick-btn-compact" data-action="weather" data-value="clear">☀️ Açık</button>
-                                    <button class="quick-btn-compact" data-action="weather" data-value="rain">🌧️ Yağmur</button>
+                                <div class="quick-row">
+                                    <span class="quick-label-simple">🌦️ Hava:</span>
+                                    <div class="quick-btns-inline">
+                                        <button class="quick-btn-simple" data-action="weather" data-value="clear">☀️ Açık</button>
+                                        <button class="quick-btn-simple" data-action="weather" data-value="rain">🌧️ Yağmur</button>
+                                    </div>
                                 </div>
-                            </div>
-                            <div class="quick-group-compact">
-                                <label class="quick-label-compact">⚔️ Zorluk</label>
-                                <div class="quick-buttons-compact">
-                                    <button class="quick-btn-compact" data-action="difficulty" data-value="peaceful">😊 Barışçıl</button>
-                                    <button class="quick-btn-compact" data-action="difficulty" data-value="normal">😐 Normal</button>
-                                    <button class="quick-btn-compact" data-action="difficulty" data-value="hard">😈 Zor</button>
+                                <div class="quick-row">
+                                    <span class="quick-label-simple">⚔️ Zorluk:</span>
+                                    <div class="quick-btns-inline">
+                                        <button class="quick-btn-simple" data-action="difficulty" data-value="peaceful">😊 Barışçıl</button>
+                                        <button class="quick-btn-simple" data-action="difficulty" data-value="normal">😐 Normal</button>
+                                        <button class="quick-btn-simple" data-action="difficulty" data-value="hard">😈 Zor</button>
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     </div>
-                </div>
 
-                <!-- Server Settings -->
-                <div class="glass-card compact-card">
-                    <div class="card-header">
-                        <h2>⚙️ Sunucu Ayarları</h2>
-                    </div>
-                    <div class="card-body compact-body">
-                        <div class="settings-grid-compact">
-                            <div class="setting-item-compact">
-                                <label>Max Oyuncu</label>
-                                <input type="number" id="max-players" class="setting-input-compact" min="1" max="100">
-                            </div>
-                            <div class="setting-item-compact">
-                                <label>View Distance</label>
-                                <input type="number" id="view-distance" class="setting-input-compact" min="3" max="32">
-                            </div>
-                            <div class="setting-item-compact">
-                                <label>PVP</label>
-                                <select id="pvp-mode" class="setting-input-compact">
-                                    <option value="true">Açık</option>
-                                    <option value="false">Kapalı</option>
-                                </select>
+                    <!-- Server Settings -->
+                    <div class="glass-card">
+                        <div class="card-header">
+                            <h2>⚙️ Sunucu Ayarları</h2>
+                        </div>
+                        <div class="card-body">
+                            <div class="settings-simple">
+                                <div class="setting-row">
+                                    <label>Max Oyuncu:</label>
+                                    <input type="number" id="max-players" class="setting-input-simple" min="1" max="100">
+                                </div>
+                                <div class="setting-row">
+                                    <label>View Distance:</label>
+                                    <input type="number" id="view-distance" class="setting-input-simple" min="3" max="32">
+                                </div>
+                                <div class="setting-row">
+                                    <label>PVP:</label>
+                                    <select id="pvp-mode" class="setting-input-simple">
+                                        <option value="true">Açık</option>
+                                        <option value="false">Kapalı</option>
+                                    </select>
+                                </div>
+                                <button id="save-settings" class="save-btn-simple">
+                                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"></path>
+                                    </svg>
+                                    Kaydet
+                                </button>
                             </div>
                         </div>
-                        <button id="save-settings" class="save-settings-btn-compact">
-                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"></path>
-                            </svg>
-                            Kaydet
-                        </button>
                     </div>
                 </div>
 

@@ -1608,3 +1608,192 @@ body {
     grid-template-columns: repeat(4, 1fr);
   }
 }
+
+/* Two Column Grid for Quick Commands & Settings */
+.two-col-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(450px, 1fr));
+  gap: 2rem;
+  margin-bottom: 2.5rem;
+}
+
+/* Simple Quick Commands */
+.quick-section {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.quick-row {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 1rem;
+  background: rgba(255, 255, 255, 0.02);
+  border-radius: 12px;
+  transition: all 0.3s;
+}
+
+.quick-row:hover {
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.quick-label-simple {
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--text);
+  min-width: 100px;
+  flex-shrink: 0;
+}
+
+.quick-btns-inline {
+  display: flex;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+  flex: 1;
+}
+
+.quick-btn-simple {
+  padding: 0.75rem 1.25rem;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid var(--glass-border);
+  border-radius: 12px;
+  color: var(--text);
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  flex: 1;
+  min-width: 100px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+}
+
+.quick-btn-simple:hover {
+  background: rgba(255, 255, 255, 0.1);
+  border-color: var(--primary);
+  transform: translateY(-3px);
+  box-shadow: 0 5px 20px rgba(0, 217, 255, 0.3);
+}
+
+.quick-btn-simple:active {
+  transform: translateY(-1px);
+}
+
+/* Simple Settings */
+.settings-simple {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.setting-row {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 1rem;
+  background: rgba(255, 255, 255, 0.02);
+  border-radius: 12px;
+  transition: all 0.3s;
+}
+
+.setting-row:hover {
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.setting-row label {
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: var(--text);
+  min-width: 120px;
+  flex-shrink: 0;
+}
+
+.setting-input-simple {
+  flex: 1;
+  padding: 0.75rem 1rem;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid var(--glass-border);
+  border-radius: 10px;
+  color: var(--text);
+  font-size: 0.95rem;
+  font-weight: 600;
+  transition: all 0.3s;
+}
+
+.setting-input-simple:focus {
+  outline: none;
+  border-color: var(--primary);
+  background: rgba(255, 255, 255, 0.08);
+  box-shadow: 0 0 0 3px rgba(0, 217, 255, 0.15);
+}
+
+.save-btn-simple {
+  width: 100%;
+  padding: 1.25rem;
+  background: linear-gradient(135deg, var(--primary), var(--secondary));
+  border: none;
+  border-radius: 15px;
+  color: white;
+  font-size: 1.05rem;
+  font-weight: 700;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 8px 30px rgba(0, 217, 255, 0.4);
+  margin-top: 0.5rem;
+}
+
+.save-btn-simple:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 12px 40px rgba(0, 217, 255, 0.5);
+}
+
+.save-btn-simple:active {
+  transform: translateY(-1px);
+}
+
+/* Players Card Full Width */
+.players-card {
+  grid-column: 1 / -1;
+}
+
+/* Responsive for two-col-grid */
+@media (max-width: 1024px) {
+  .two-col-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 768px) {
+  .quick-row {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  
+  .quick-label-simple {
+    min-width: auto;
+  }
+  
+  .quick-btns-inline {
+    width: 100%;
+  }
+  
+  .setting-row {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  
+  .setting-row label {
+    min-width: auto;
+  }
+  
+  .setting-input-simple {
+    width: 100%;
+  }
+}
