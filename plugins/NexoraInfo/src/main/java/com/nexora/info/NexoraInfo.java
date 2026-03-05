@@ -66,11 +66,13 @@ public class NexoraInfo extends JavaPlugin implements Listener {
         Objective objective = board.registerNewObjective("nexora", "dummy", "");
         objective.setDisplaySlot(DisplaySlot.SIDEBAR);
         
+        int line = 10;
+        
         // Oyuncu sayısı
         int onlinePlayers = Bukkit.getOnlinePlayers().size();
         int maxPlayers = Bukkit.getMaxPlayers();
         Score players = objective.getScore(ChatColor.WHITE + "👥 " + ChatColor.AQUA + onlinePlayers + ChatColor.GRAY + "/" + ChatColor.AQUA + maxPlayers);
-        players.setScore(6);
+        players.setScore(line--);
         
         // Dünya günü ve zaman
         long worldTime = player.getWorld().getFullTime();
@@ -78,24 +80,52 @@ public class NexoraInfo extends JavaPlugin implements Listener {
         long timeOfDay = player.getWorld().getTime();
         String timeString = getTimeString(timeOfDay);
         Score dayTime = objective.getScore(ChatColor.WHITE + "📅 " + ChatColor.AQUA + "Gün " + day + " " + timeString);
-        dayTime.setScore(5);
-        
-        // Boşluk
-        Score space = objective.getScore(ChatColor.DARK_GRAY + "");
-        space.setScore(4);
+        dayTime.setScore(line--);
         
         // Koordinatlar
         int x = player.getLocation().getBlockX();
         int y = player.getLocation().getBlockY();
         int z = player.getLocation().getBlockZ();
         Score coords = objective.getScore(ChatColor.WHITE + "📍 " + ChatColor.GRAY + x + ", " + y + ", " + z);
-        coords.setScore(3);
+        coords.setScore(line--);
         
         // Ping
         int ping = player.getPing();
         String pingColor = ping < 50 ? ChatColor.GREEN + "" : ping < 100 ? ChatColor.YELLOW + "" : ChatColor.RED + "";
         Score pingScore = objective.getScore(ChatColor.WHITE + "📶 " + pingColor + ping + "ms");
-        pingScore.setScore(2);
+        pingScore.setScore(line--);
+        
+        // Boşluk
+        Score space1 = objective.getScore(ChatColor.DARK_GRAY + " ");
+        space1.setScore(line--);
+        
+        // Bakiye (NexoraEconomy varsa)
+        try {
+            org.bukkit.plugin.Plugin economyPlugin = Bukkit.getPluginManager().getPlugin("NexoraEconomy");
+            if (economyPlugin != null && economyPlugin.isEnabled()) {
+                Object economy = economyPlugin.getClass().getMethod("getInstance").invoke(null);
+                double balance = (double) economy.getClass().getMethod("getBalance", java.util.UUID.class)
+                    .invoke(economy, player.getUniqueId());
+                Score balanceScore = objective.getScore(ChatColor.WHITE + "💰 " + ChatColor.GOLD + String.format("%.0f₺", balance));
+                balanceScore.setScore(line--);
+            }
+        } catch (Exception e) {
+            // Economy plugin yok veya hata
+        }
+        
+        // Parti bilgisi (NexoraParty varsa)
+        try {
+            org.bukkit.plugin.Plugin partyPlugin = Bukkit.getPluginManager().getPlugin("NexoraParty");
+            if (partyPlugin != null && partyPlugin.isEnabled()) {
+                // Parti scoreboard'ı varsa, parti bilgisini gösterme (çakışma olmasın)
+                if (player.getScoreboard().getObjective("party") == null) {
+                    Score partyScore = objective.getScore(ChatColor.WHITE + "👥 " + ChatColor.GRAY + "Parti Yok");
+                    partyScore.setScore(line--);
+                }
+            }
+        } catch (Exception e) {
+            // Party plugin yok veya hata
+        }
         
         player.setScoreboard(board);
     }

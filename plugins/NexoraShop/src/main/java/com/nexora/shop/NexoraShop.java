@@ -253,8 +253,8 @@ public class NexoraShop extends JavaPlugin implements Listener {
             return;
         }
         
-        // Kategori menüsü
-        if (clicked.getItemMeta().getDisplayName().contains("Geri Dön")) {
+        // Kategori menüsü - Geri dön butonu
+        if (clicked.getType() == Material.ARROW) {
             openShopMenu(player);
             return;
         }

@@ -98,7 +98,7 @@ public class NexoraDaily extends JavaPlugin implements Listener {
                         completeQuest(player, quest);
                     } else {
                         player.sendMessage(ChatColor.YELLOW + "⚒ Görev İlerlemesi: " + 
-                            ChatColor.WHITE + quest.getProgress() + "/" + quest.getTarget() + 
+                            ChatColor.WHITE + String.valueOf(quest.getProgress()) + "/" + String.valueOf(quest.getTarget()) + 
                             ChatColor.GRAY + " (" + quest.getDescription() + ")");
                     }
                 }
@@ -125,7 +125,7 @@ public class NexoraDaily extends JavaPlugin implements Listener {
                         completeQuest(player, quest);
                     } else {
                         player.sendMessage(ChatColor.YELLOW + "⚔ Görev İlerlemesi: " + 
-                            ChatColor.WHITE + quest.getProgress() + "/" + quest.getTarget() + 
+                            ChatColor.WHITE + String.valueOf(quest.getProgress()) + "/" + String.valueOf(quest.getTarget()) + 
                             ChatColor.GRAY + " (" + quest.getDescription() + ")");
                     }
                 }
