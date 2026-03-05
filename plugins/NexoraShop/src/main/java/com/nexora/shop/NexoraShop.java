@@ -295,11 +295,20 @@ public class NexoraShop extends JavaPlugin implements Listener {
             return;
         }
         
+        // Para çek
+        double balanceBefore = economy.getBalance(player.getUniqueId());
         economy.removeBalance(player.getUniqueId(), totalPrice);
+        double balanceAfter = economy.getBalance(player.getUniqueId());
+        
+        getLogger().info(player.getName() + " satın aldı: " + amount + "x " + item.getMaterial() + 
+            " | Önceki bakiye: " + balanceBefore + " | Sonraki bakiye: " + balanceAfter);
+        
         player.getInventory().addItem(new ItemStack(item.getMaterial(), amount));
         
         player.sendMessage(ChatColor.GREEN + "✓ " + amount + "x " + getItemName(item.getMaterial()) + 
             " satın aldın! (" + ChatColor.GOLD + economy.formatMoney(totalPrice) + ChatColor.GREEN + ")");
+        player.sendMessage(ChatColor.GRAY + "Yeni bakiyen: " + ChatColor.GREEN + 
+            economy.formatMoney(balanceAfter));
     }
     
     private void sellItem(Player player, ShopItem item, int amount) {
