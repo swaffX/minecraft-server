@@ -172,13 +172,17 @@ client.once('ready', async () => {
     
     try {
         console.log('Slash komutları kaydediliyor...');
+        
+        // Global komutlar için
         await rest.put(
             Routes.applicationCommands(client.user.id),
             { body: commands }
         );
-        console.log('Slash komutları başarıyla kaydedildi!');
+        
+        console.log('✅ Slash komutları başarıyla kaydedildi!');
+        console.log('📊 /stats komutu kullanıma hazır!');
     } catch (error) {
-        console.error('Slash komutları kaydedilemedi:', error);
+        console.error('❌ Slash komutları kaydedilemedi:', error);
     }
     
     // Bot durumunu ayarla

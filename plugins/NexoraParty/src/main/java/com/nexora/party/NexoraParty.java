@@ -1,7 +1,11 @@
 package com.nexora.party;
 
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.format.NamedTextColor;
+import net.kyori.adventure.text.format.TextDecoration;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.Location;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.ArmorStand;
@@ -33,8 +37,9 @@ public class NexoraParty extends JavaPlugin implements Listener {
         // Event listener
         Bukkit.getPluginManager().registerEvents(this, this);
         
-        // Hologram güncelleme (her saniye)
+        // Hologram ve action bar güncelleme (her saniye)
         Bukkit.getScheduler().runTaskTimer(this, this::updateHolograms, 20L, 20L);
+        Bukkit.getScheduler().runTaskTimer(this, this::updateActionBars, 20L, 20L);
     }
     
     @Override
@@ -431,7 +436,7 @@ public class NexoraParty extends JavaPlugin implements Listener {
         }
         
         if (hologram != null) {
-            hologram.teleport(player.getLocation().add(0, 2.3, 0));
+            hologram.teleport(player.getLocation().add(0, 2.5, 0));
             
             UUID partyId = playerToParty.get(player.getUniqueId());
             if (partyId != null) {
@@ -439,14 +444,20 @@ public class NexoraParty extends JavaPlugin implements Listener {
                 if (party != null) {
                     boolean isLeader = party.getLeader().equals(player.getUniqueId());
                     String text = isLeader ? 
-                        ChatColor.GOLD + "★ " + ChatColor.YELLOW + "Parti Lideri" :
-                        ChatColor.GREEN + "✓ " + ChatColor.AQUA + "Parti Üyesi";
+                        ChatColor.GOLD + "★ " + ChatColor.YELLOW + player.getName() :
+                        ChatColor.GREEN + "✓ " + ChatColor.AQUA + player.getName();
                     hologram.setCustomName(text);
+                    hologram.setCustomNameVisible(true);
+                    hologram.setGlowing(true);
                 } else {
                     hologram.setCustomName("");
+                    hologram.setCustomNameVisible(false);
+                    hologram.setGlowing(false);
                 }
             } else {
                 hologram.setCustomName("");
+                hologram.setCustomNameVisible(false);
+                hologram.setGlowing(false);
             }
         }
     }
@@ -454,6 +465,85 @@ public class NexoraParty extends JavaPlugin implements Listener {
     private void updateHolograms() {
         for (Player player : Bukkit.getOnlinePlayers()) {
             updatePlayerHologram(player);
+        }
+    }
+    
+    private void updateActionBars() {
+        for (UUID partyId : parties.keySet()) {
+            Party party = parties.get(partyId);
+            if (party == null) continue;
+            
+            for (UUID memberId : party.getMembers()) {
+                Player player = Bukkit.getPlayer(memberId);
+                if (player == null || !player.isOnline()) continue;
+                
+                // Parti üyelerinin mesafelerini hesapla
+                StringBuilder actionBar = new StringBuilder();
+                actionBar.append(ChatColor.GOLD).append("👥 Parti: ");
+                
+                boolean first = true;
+                for (UUID otherMemberId : party.getMembers()) {
+                    if (otherMemberId.equals(memberId)) continue;
+                    
+                    Player otherMember = Bukkit.getPlayer(otherMemberId);
+                    if (otherMember == null || !otherMember.isOnline()) continue;
+                    
+                    if (!first) {
+                        actionBar.append(ChatColor.DARK_GRAY).append(" | ");
+                    }
+                    first = false;
+                    
+                    // Mesafe hesapla
+                    double distance = player.getLocation().distance(otherMember.getLocation());
+                    String distanceColor;
+                    if (distance < 10) {
+                        distanceColor = ChatColor.GREEN + "";
+                    } else if (distance < 50) {
+                        distanceColor = ChatColor.YELLOW + "";
+                    } else {
+                        distanceColor = ChatColor.RED + "";
+                    }
+                    
+                    // Yön hesapla (pusula)
+                    String direction = getDirection(player.getLocation(), otherMember.getLocation());
+                    
+                    actionBar.append(ChatColor.WHITE).append(otherMember.getName())
+                            .append(" ").append(distanceColor).append(String.format("%.0fm", distance))
+                            .append(" ").append(direction);
+                }
+                
+                // Action bar gönder
+                player.sendActionBar(Component.text(actionBar.toString()));
+            }
+        }
+    }
+    
+    private String getDirection(Location from, Location to) {
+        double dx = to.getX() - from.getX();
+        double dz = to.getZ() - from.getZ();
+        double angle = Math.toDegrees(Math.atan2(dz, dx)) - 90;
+        
+        if (angle < 0) {
+            angle += 360;
+        }
+        
+        // 8 yön
+        if (angle >= 337.5 || angle < 22.5) {
+            return ChatColor.AQUA + "↑"; // Kuzey
+        } else if (angle >= 22.5 && angle < 67.5) {
+            return ChatColor.AQUA + "↗"; // Kuzeydoğu
+        } else if (angle >= 67.5 && angle < 112.5) {
+            return ChatColor.AQUA + "→"; // Doğu
+        } else if (angle >= 112.5 && angle < 157.5) {
+            return ChatColor.AQUA + "↘"; // Güneydoğu
+        } else if (angle >= 157.5 && angle < 202.5) {
+            return ChatColor.AQUA + "↓"; // Güney
+        } else if (angle >= 202.5 && angle < 247.5) {
+            return ChatColor.AQUA + "↙"; // Güneybatı
+        } else if (angle >= 247.5 && angle < 292.5) {
+            return ChatColor.AQUA + "←"; // Batı
+        } else {
+            return ChatColor.AQUA + "↖"; // Kuzeybatı
         }
     }
     
