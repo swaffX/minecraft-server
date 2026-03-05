@@ -235,6 +235,10 @@ public class NexoraShop extends JavaPlugin implements Listener {
         
         // Ana menü
         if (title.equals(ChatColor.GOLD + "" + ChatColor.BOLD + "🛒 MAĞAZA")) {
+            if (!clicked.hasItemMeta() || !clicked.getItemMeta().hasDisplayName()) {
+                return;
+            }
+            
             String itemName = clicked.getItemMeta().getDisplayName();
             
             if (itemName.contains("Bloklar")) {
@@ -253,12 +257,16 @@ public class NexoraShop extends JavaPlugin implements Listener {
             return;
         }
         
-        // Kategori menüsü - Geri dön butonu
-        if (clicked.getType() == Material.ARROW) {
-            openShopMenu(player);
-            return;
+        // Kategori menüsü - Geri dön butonu kontrolü (önce)
+        if (clicked.hasItemMeta() && clicked.getItemMeta().hasDisplayName()) {
+            String displayName = clicked.getItemMeta().getDisplayName();
+            if (displayName.contains("Geri Dön") || displayName.contains("Geri")) {
+                openShopMenu(player);
+                return;
+            }
         }
         
+        // Kategori menüsü - Ürün satın alma/satma
         Material material = clicked.getType();
         ShopItem shopItem = shopItems.get(material);
         
