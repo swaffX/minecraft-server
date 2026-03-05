@@ -1,0 +1,22 @@
+name: NexoraRanks
+version: 1.0.0
+main: com.nexora.ranks.NexoraRanks
+api-version: '1.21'
+author: Nexora
+description: Rütbe sistemi
+
+commands:
+  rank:
+    description: Rütbeni göster
+    usage: /rank [oyuncu]
+    aliases: [ranks, rutbe]
+  
+  setrank:
+    description: Oyuncuya rütbe ver
+    usage: /setrank <oyuncu> <rütbe>
+    permission: nexoraranks.setrank
+
+permissions:
+  nexoraranks.setrank:
+    description: Rütbe verme yetkisi
+    default: op

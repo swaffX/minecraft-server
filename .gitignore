@@ -24,3 +24,15 @@ plugins/*
 # NexoraInfo plugin kaynak kodlarını tut
 !plugins/NexoraInfo/
 !plugins/NexoraInfo/**
+
+# NexoraChat plugin kaynak kodlarını tut
+!plugins/NexoraChat/
+!plugins/NexoraChat/**
+
+# NexoraKits plugin kaynak kodlarını tut
+!plugins/NexoraKits/
+!plugins/NexoraKits/**
+
+# NexoraRanks plugin kaynak kodlarını tut
+!plugins/NexoraRanks/
+!plugins/NexoraRanks/**

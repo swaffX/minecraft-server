@@ -1,0 +1,28 @@
+name: NexoraKits
+version: 1.0.0
+main: com.nexora.kits.NexoraKits
+api-version: '1.21'
+author: Nexora
+description: Kit sistemi
+
+commands:
+  kit:
+    description: Kit al
+    usage: /kit [isim]
+    aliases: [kits]
+  
+  createkit:
+    description: Kit oluştur
+    usage: /createkit <isim>
+    permission: nexorakits.create
+
+permissions:
+  nexorakits.create:
+    description: Kit oluşturma yetkisi
+    default: op
+  nexorakits.starter:
+    description: Başlangıç kiti
+    default: true
+  nexorakits.vip:
+    description: VIP kiti
+    default: op

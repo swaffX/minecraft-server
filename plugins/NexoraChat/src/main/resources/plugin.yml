@@ -1,0 +1,33 @@
+name: NexoraChat
+version: 1.0.0
+main: com.nexora.chat.NexoraChat
+api-version: '1.21'
+author: Nexora
+description: Gelişmiş chat sistemi
+
+commands:
+  clearchat:
+    description: Chat'i temizler
+    usage: /clearchat
+    permission: nexorachat.clearchat
+    aliases: [cc]
+  
+  mutechat:
+    description: Chat'i susturur
+    usage: /mutechat
+    permission: nexorachat.mutechat
+    aliases: [mc]
+
+permissions:
+  nexorachat.clearchat:
+    description: Chat temizleme yetkisi
+    default: op
+  nexorachat.mutechat:
+    description: Chat susturma yetkisi
+    default: op
+  nexorachat.bypass:
+    description: Chat kurallarını bypass etme
+    default: op
+  nexorachat.color:
+    description: Renkli yazma yetkisi
+    default: op
