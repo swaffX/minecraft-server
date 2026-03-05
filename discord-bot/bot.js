@@ -188,9 +188,8 @@ client.once('ready', async () => {
     // Bot durumunu ayarla
     client.user.setPresence({
         activities: [{
-            name: 'https://www.twitch.tv/swaffval',
-            type: 1, // 1 = Streaming
-            url: 'https://www.twitch.tv/swaffval'
+            name: 'made by swaff',
+            type: 0 // 0 = Playing
         }],
         status: 'online'
     });
