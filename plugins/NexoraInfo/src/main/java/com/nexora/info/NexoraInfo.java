@@ -69,13 +69,13 @@ public class NexoraInfo extends JavaPlugin implements Listener {
         
         // Boşluk
         Score space1 = objective.getScore(ChatColor.DARK_GRAY + "");
-        space1.setScore(10);
+        space1.setScore(7);
         
         // Oyuncu sayısı
         int onlinePlayers = Bukkit.getOnlinePlayers().size();
         int maxPlayers = Bukkit.getMaxPlayers();
         Score players = objective.getScore(ChatColor.WHITE + "👥 " + ChatColor.AQUA + onlinePlayers + ChatColor.GRAY + "/" + ChatColor.AQUA + maxPlayers);
-        players.setScore(9);
+        players.setScore(6);
         
         // Dünya günü ve zaman
         long worldTime = player.getWorld().getFullTime();
@@ -83,32 +83,24 @@ public class NexoraInfo extends JavaPlugin implements Listener {
         long timeOfDay = player.getWorld().getTime();
         String timeString = getTimeString(timeOfDay);
         Score dayTime = objective.getScore(ChatColor.WHITE + "📅 " + ChatColor.AQUA + "Gün " + day + " " + timeString);
-        dayTime.setScore(8);
+        dayTime.setScore(5);
         
         // Boşluk
         Score space2 = objective.getScore(ChatColor.DARK_GRAY + " ");
-        space2.setScore(7);
+        space2.setScore(4);
         
         // Koordinatlar
         int x = player.getLocation().getBlockX();
         int y = player.getLocation().getBlockY();
         int z = player.getLocation().getBlockZ();
         Score coords = objective.getScore(ChatColor.WHITE + "📍 " + ChatColor.GRAY + x + ", " + y + ", " + z);
-        coords.setScore(6);
+        coords.setScore(3);
         
         // Ping
         int ping = player.getPing();
         String pingColor = ping < 50 ? ChatColor.GREEN + "" : ping < 100 ? ChatColor.YELLOW + "" : ChatColor.RED + "";
         Score pingScore = objective.getScore(ChatColor.WHITE + "📶 " + pingColor + ping + "ms");
-        pingScore.setScore(5);
-        
-        // Boşluk
-        Score space3 = objective.getScore(ChatColor.DARK_GRAY + "  ");
-        space3.setScore(4);
-        
-        // IP
-        Score ip = objective.getScore(ChatColor.GRAY + "194.105.5.37");
-        ip.setScore(3);
+        pingScore.setScore(2);
         
         player.setScoreboard(board);
     }
