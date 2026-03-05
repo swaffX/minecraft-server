@@ -93,18 +93,6 @@
                     </div>
 
                     <div class="stat-card-wide">
-                        <div class="stat-icon ping-icon">
-                            <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline>
-                            </svg>
-                        </div>
-                        <div class="stat-content">
-                            <div class="stat-label">TPS</div>
-                            <div id="server-tps" class="stat-value">20.0</div>
-                        </div>
-                    </div>
-
-                    <div class="stat-card-wide">
                         <div class="stat-icon version-icon">
                             <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                                 <path d="M12 2v20M2 12h20"></path>
@@ -239,12 +227,12 @@
                 </div>
 
                 <!-- Players -->
-                <div class="glass-card">
+                <div class="glass-card players-card">
                     <div class="card-header">
                         <h2>👥 Çevrimiçi Oyuncular</h2>
                     </div>
                     <div class="card-body">
-                        <div id="players-list" class="players-grid">
+                        <div id="players-list" class="players-list-compact">
                             <div class="empty-state">
                                 <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
                                     <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
@@ -259,35 +247,32 @@
                 </div>
 
                 <!-- Quick Commands -->
-                <div class="glass-card">
+                <div class="glass-card compact-card">
                     <div class="card-header">
                         <h2>⚡ Hızlı Komutlar</h2>
                     </div>
-                    <div class="card-body">
-                        <div class="quick-commands">
-                            <div class="quick-group">
-                                <label class="quick-label">⏰ Zaman</label>
-                                <div class="quick-buttons">
-                                    <button class="quick-btn" data-action="time" data-value="day">☀️ Gündüz</button>
-                                    <button class="quick-btn" data-action="time" data-value="night">🌙 Gece</button>
-                                    <button class="quick-btn" data-action="time" data-value="noon">🌞 Öğle</button>
+                    <div class="card-body compact-body">
+                        <div class="quick-commands-compact">
+                            <div class="quick-group-compact">
+                                <label class="quick-label-compact">⏰ Zaman</label>
+                                <div class="quick-buttons-compact">
+                                    <button class="quick-btn-compact" data-action="time" data-value="day">☀️ Gündüz</button>
+                                    <button class="quick-btn-compact" data-action="time" data-value="night">🌙 Gece</button>
                                 </div>
                             </div>
-                            <div class="quick-group">
-                                <label class="quick-label">🌦️ Hava Durumu</label>
-                                <div class="quick-buttons">
-                                    <button class="quick-btn" data-action="weather" data-value="clear">☀️ Açık</button>
-                                    <button class="quick-btn" data-action="weather" data-value="rain">🌧️ Yağmur</button>
-                                    <button class="quick-btn" data-action="weather" data-value="thunder">⛈️ Fırtına</button>
+                            <div class="quick-group-compact">
+                                <label class="quick-label-compact">🌦️ Hava</label>
+                                <div class="quick-buttons-compact">
+                                    <button class="quick-btn-compact" data-action="weather" data-value="clear">☀️ Açık</button>
+                                    <button class="quick-btn-compact" data-action="weather" data-value="rain">🌧️ Yağmur</button>
                                 </div>
                             </div>
-                            <div class="quick-group">
-                                <label class="quick-label">⚔️ Zorluk</label>
-                                <div class="quick-buttons">
-                                    <button class="quick-btn" data-action="difficulty" data-value="peaceful">😊 Barışçıl</button>
-                                    <button class="quick-btn" data-action="difficulty" data-value="easy">🙂 Kolay</button>
-                                    <button class="quick-btn" data-action="difficulty" data-value="normal">😐 Normal</button>
-                                    <button class="quick-btn" data-action="difficulty" data-value="hard">😈 Zor</button>
+                            <div class="quick-group-compact">
+                                <label class="quick-label-compact">⚔️ Zorluk</label>
+                                <div class="quick-buttons-compact">
+                                    <button class="quick-btn-compact" data-action="difficulty" data-value="peaceful">😊 Barışçıl</button>
+                                    <button class="quick-btn-compact" data-action="difficulty" data-value="normal">😐 Normal</button>
+                                    <button class="quick-btn-compact" data-action="difficulty" data-value="hard">😈 Zor</button>
                                 </div>
                             </div>
                         </div>
@@ -295,39 +280,33 @@
                 </div>
 
                 <!-- Server Settings -->
-                <div class="glass-card">
+                <div class="glass-card compact-card">
                     <div class="card-header">
                         <h2>⚙️ Sunucu Ayarları</h2>
                     </div>
-                    <div class="card-body">
-                        <div class="settings-grid">
-                            <div class="setting-item">
+                    <div class="card-body compact-body">
+                        <div class="settings-grid-compact">
+                            <div class="setting-item-compact">
                                 <label>Max Oyuncu</label>
-                                <input type="number" id="max-players" class="setting-input" min="1" max="100">
+                                <input type="number" id="max-players" class="setting-input-compact" min="1" max="100">
                             </div>
-                            <div class="setting-item">
+                            <div class="setting-item-compact">
                                 <label>View Distance</label>
-                                <input type="number" id="view-distance" class="setting-input" min="3" max="32">
+                                <input type="number" id="view-distance" class="setting-input-compact" min="3" max="32">
                             </div>
-                            <div class="setting-item">
+                            <div class="setting-item-compact">
                                 <label>PVP</label>
-                                <select id="pvp-mode" class="setting-input">
+                                <select id="pvp-mode" class="setting-input-compact">
                                     <option value="true">Açık</option>
                                     <option value="false">Kapalı</option>
                                 </select>
                             </div>
-                            <div class="setting-item">
-                                <label>Spawn Protection</label>
-                                <input type="number" id="spawn-protection" class="setting-input" min="0" max="100">
-                            </div>
                         </div>
-                        <button id="save-settings" class="save-settings-btn">
-                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <button id="save-settings" class="save-settings-btn-compact">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                                 <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"></path>
-                                <polyline points="17 21 17 13 7 13 7 21"></polyline>
-                                <polyline points="7 3 7 8 15 8"></polyline>
                             </svg>
-                            Ayarları Kaydet
+                            Kaydet
                         </button>
                     </div>
                 </div>

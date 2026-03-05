@@ -121,7 +121,7 @@ function initDashboard() {
     });
     
     // Quick command buttons
-    document.querySelectorAll('.quick-btn').forEach(btn => {
+    document.querySelectorAll('.quick-btn-compact').forEach(btn => {
         btn.addEventListener('click', () => {
             const action = btn.dataset.action;
             const value = btn.dataset.value;
@@ -157,21 +157,37 @@ async function updateStatus() {
             // Players list
             if (data.players.list && data.players.list.length > 0) {
                 playersListEl.innerHTML = data.players.list.map(player => `
-                    <div class="player-item" data-player="${player.name}">
-                        <img src="https://mc-heads.net/avatar/${player.name}/64" 
-                             alt="${player.name}" 
-                             class="player-avatar">
-                        <span>${player.name}</span>
+                    <div class="player-item-compact">
+                        <div class="player-info">
+                            <img src="https://mc-heads.net/avatar/${player.name}/48" 
+                                 alt="${player.name}" 
+                                 class="player-avatar-compact">
+                            <span class="player-name">${player.name}</span>
+                        </div>
+                        <div class="player-actions">
+                            <button class="player-action-btn kick" onclick="quickPlayerAction('kick', '${player.name}')">
+                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <line x1="18" y1="6" x2="6" y2="18"></line>
+                                    <line x1="6" y1="6" x2="18" y2="18"></line>
+                                </svg>
+                                At
+                            </button>
+                            <button class="player-action-btn ban" onclick="quickPlayerAction('ban', '${player.name}')">
+                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <circle cx="12" cy="12" r="10"></circle>
+                                    <line x1="4.93" y1="4.93" x2="19.07" y2="19.07"></line>
+                                </svg>
+                                Ban
+                            </button>
+                            <button class="player-action-btn op" onclick="quickPlayerAction('op', '${player.name}')">
+                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
+                                </svg>
+                                OP
+                            </button>
+                        </div>
                     </div>
                 `).join('');
-                
-                // Add click handlers to player items
-                document.querySelectorAll('.player-item').forEach(item => {
-                    item.addEventListener('click', () => {
-                        const playerName = item.dataset.player;
-                        openPlayerModal(playerName);
-                    });
-                });
             } else if (data.players.online > 0) {
                 playersListEl.innerHTML = `
                     <div class="empty-state">
@@ -649,5 +665,42 @@ function updateCharts(tps, cpu, ramUsed, ramTotal) {
         const total = parseInt(ramTotal);
         resourceChart.data.datasets[0].data = [used, total - used];
         resourceChart.update('none');
+    }
+}
+
+
+// Quick player actions
+async function quickPlayerAction(action, playerName) {
+    const actions = {
+        kick: { endpoint: '/api/player/kick', message: 'atılıyor', confirm: 'atmak' },
+        ban: { endpoint: '/api/player/ban', message: 'banlanıyor', confirm: 'banlamak' },
+        op: { endpoint: '/api/player/op', message: 'OP yapılıyor', confirm: 'OP yapmak' },
+        deop: { endpoint: '/api/player/deop', message: 'OP\'liği alınıyor', confirm: 'OP\'liğini almak' }
+    };
+    
+    const actionData = actions[action];
+    if (!actionData) return;
+    
+    if (!confirm(`${playerName} oyuncusunu ${actionData.confirm} istediğinize emin misiniz?`)) {
+        return;
+    }
+    
+    try {
+        const response = await fetch(actionData.endpoint, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ player: playerName })
+        });
+        
+        const data = await response.json();
+        
+        if (data.success) {
+            showNotification('Başarılı!', data.message, 'success');
+            setTimeout(updateStatus, 1000);
+        } else {
+            showNotification('Hata!', data.error, 'error');
+        }
+    } catch (error) {
+        showNotification('Hata!', 'İşlem başarısız!', 'error');
     }
 }
