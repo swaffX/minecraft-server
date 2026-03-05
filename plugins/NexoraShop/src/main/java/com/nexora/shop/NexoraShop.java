@@ -233,6 +233,11 @@ public class NexoraShop extends JavaPlugin implements Listener {
             return;
         }
         
+        // Oyuncu kendi envanterine tıkladıysa işlem yapma
+        if (event.getClickedInventory() == player.getInventory()) {
+            return;
+        }
+        
         // Ana menü
         if (title.equals(ChatColor.GOLD + "" + ChatColor.BOLD + "🛒 MAĞAZA")) {
             if (!clicked.hasItemMeta() || !clicked.getItemMeta().hasDisplayName()) {
