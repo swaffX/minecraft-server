@@ -12,11 +12,11 @@
 - `/setrank <oyuncu> <rütbe>` - Manuel rütbe ver (OP)
 
 ## Otomatik Rütbeler (Oyun Süresine Göre)
-1. **YENİ OYUNCU** - 0-5 saat (Gri)
-2. **AKTİF** - 5+ saat (Yeşil)
-3. **DENEYİMLİ** - 20+ saat (Mavi)
-4. **USTA** - 50+ saat (Mor)
-5. **EFSANE** - 100+ saat (Açık Mor)
+1. **ROOKIE** - 0-5 saat (Gri)
+2. **WARRIOR** - 5+ saat (Yeşil, Kalın)
+3. **CHAMPION** - 20+ saat (Mavi, Kalın)
+4. **MASTER** - 50+ saat (Mor, Kalın)
+5. **LEGEND** - 100+ saat (Açık Mor, Kalın)
 
 ## Manuel Rütbeler
 - **OWNER** - Kırmızı koyu, kalın

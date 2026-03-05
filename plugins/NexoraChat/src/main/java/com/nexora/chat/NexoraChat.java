@@ -72,7 +72,7 @@ public class NexoraChat extends JavaPlugin implements Listener {
     }
     
     private String getRank(Player player) {
-        // Rütbe kontrolü (NexoraRanks ile entegre olacak)
+        // Rütbe kontrolü (NexoraRanks ile entegre)
         if (player.hasPermission("nexora.owner")) {
             return ChatColor.DARK_RED + "" + ChatColor.BOLD + "[OWNER]";
         } else if (player.hasPermission("nexora.admin")) {
@@ -81,8 +81,16 @@ public class NexoraChat extends JavaPlugin implements Listener {
             return ChatColor.GOLD + "" + ChatColor.BOLD + "[MOD]";
         } else if (player.hasPermission("nexora.vip")) {
             return ChatColor.AQUA + "" + ChatColor.BOLD + "[VIP]";
+        } else if (player.hasPermission("nexora.legend")) {
+            return ChatColor.LIGHT_PURPLE + "" + ChatColor.BOLD + "[LEGEND]";
+        } else if (player.hasPermission("nexora.master")) {
+            return ChatColor.DARK_PURPLE + "" + ChatColor.BOLD + "[MASTER]";
+        } else if (player.hasPermission("nexora.champion")) {
+            return ChatColor.BLUE + "" + ChatColor.BOLD + "[CHAMPION]";
+        } else if (player.hasPermission("nexora.warrior")) {
+            return ChatColor.GREEN + "" + ChatColor.BOLD + "[WARRIOR]";
         } else {
-            return ChatColor.GRAY + "[OYUNCU]";
+            return ChatColor.GRAY + "[ROOKIE]";
         }
     }
     

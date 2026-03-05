@@ -135,28 +135,28 @@ public class NexoraRanks extends JavaPlugin implements Listener {
         
         // Otomatik rütbe sistemi (oyun süresine göre)
         if (playTime >= 100) {
-            // Efsane (100+ saat)
+            // LEGEND (100+ saat)
             if (!player.hasPermission("nexora.legend")) {
                 Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "lp user " + player.getName() + " permission set nexora.legend true");
-                player.sendMessage(ChatColor.GOLD + "✦ Tebrikler! " + ChatColor.LIGHT_PURPLE + "" + ChatColor.BOLD + "EFSANE" + ChatColor.GOLD + " rütbesine yükseldin!");
+                player.sendMessage(ChatColor.GOLD + "✦ Tebrikler! " + ChatColor.LIGHT_PURPLE + "" + ChatColor.BOLD + "LEGEND" + ChatColor.GOLD + " rütbesine yükseldin!");
             }
         } else if (playTime >= 50) {
-            // Usta (50+ saat)
+            // MASTER (50+ saat)
             if (!player.hasPermission("nexora.master")) {
                 Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "lp user " + player.getName() + " permission set nexora.master true");
-                player.sendMessage(ChatColor.GOLD + "✦ Tebrikler! " + ChatColor.DARK_PURPLE + "" + ChatColor.BOLD + "USTA" + ChatColor.GOLD + " rütbesine yükseldin!");
+                player.sendMessage(ChatColor.GOLD + "✦ Tebrikler! " + ChatColor.DARK_PURPLE + "" + ChatColor.BOLD + "MASTER" + ChatColor.GOLD + " rütbesine yükseldin!");
             }
         } else if (playTime >= 20) {
-            // Deneyimli (20+ saat)
-            if (!player.hasPermission("nexora.expert")) {
-                Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "lp user " + player.getName() + " permission set nexora.expert true");
-                player.sendMessage(ChatColor.GOLD + "✦ Tebrikler! " + ChatColor.BLUE + "" + ChatColor.BOLD + "DENEYİMLİ" + ChatColor.GOLD + " rütbesine yükseldin!");
+            // CHAMPION (20+ saat)
+            if (!player.hasPermission("nexora.champion")) {
+                Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "lp user " + player.getName() + " permission set nexora.champion true");
+                player.sendMessage(ChatColor.GOLD + "✦ Tebrikler! " + ChatColor.BLUE + "" + ChatColor.BOLD + "CHAMPION" + ChatColor.GOLD + " rütbesine yükseldin!");
             }
         } else if (playTime >= 5) {
-            // Aktif (5+ saat)
-            if (!player.hasPermission("nexora.active")) {
-                Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "lp user " + player.getName() + " permission set nexora.active true");
-                player.sendMessage(ChatColor.GOLD + "✦ Tebrikler! " + ChatColor.GREEN + "" + ChatColor.BOLD + "AKTİF" + ChatColor.GOLD + " rütbesine yükseldin!");
+            // WARRIOR (5+ saat)
+            if (!player.hasPermission("nexora.warrior")) {
+                Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "lp user " + player.getName() + " permission set nexora.warrior true");
+                player.sendMessage(ChatColor.GOLD + "✦ Tebrikler! " + ChatColor.GREEN + "" + ChatColor.BOLD + "WARRIOR" + ChatColor.GOLD + " rütbesine yükseldin!");
             }
         }
     }
@@ -164,13 +164,13 @@ public class NexoraRanks extends JavaPlugin implements Listener {
     private String getRankName(Player player) {
         if (player.hasPermission("nexora.owner")) return "OWNER";
         if (player.hasPermission("nexora.admin")) return "ADMIN";
-        if (player.hasPermission("nexora.mod")) return "MODERATÖR";
+        if (player.hasPermission("nexora.mod")) return "MODERATOR";
         if (player.hasPermission("nexora.vip")) return "VIP";
-        if (player.hasPermission("nexora.legend")) return "EFSANE";
-        if (player.hasPermission("nexora.master")) return "USTA";
-        if (player.hasPermission("nexora.expert")) return "DENEYİMLİ";
-        if (player.hasPermission("nexora.active")) return "AKTİF";
-        return "YENİ OYUNCU";
+        if (player.hasPermission("nexora.legend")) return "LEGEND";
+        if (player.hasPermission("nexora.master")) return "MASTER";
+        if (player.hasPermission("nexora.champion")) return "CHAMPION";
+        if (player.hasPermission("nexora.warrior")) return "WARRIOR";
+        return "ROOKIE";
     }
     
     private String getRankColor(Player player) {
@@ -194,14 +194,14 @@ public class NexoraRanks extends JavaPlugin implements Listener {
         }
         
         if (playTime >= 100) return ChatColor.GOLD + "Maksimum Rütbe!";
-        if (playTime >= 50) return ChatColor.LIGHT_PURPLE + "EFSANE " + ChatColor.GRAY + "(100 saat)";
-        if (playTime >= 20) return ChatColor.DARK_PURPLE + "USTA " + ChatColor.GRAY + "(50 saat)";
-        if (playTime >= 5) return ChatColor.BLUE + "DENEYİMLİ " + ChatColor.GRAY + "(20 saat)";
-        return ChatColor.GREEN + "AKTİF " + ChatColor.GRAY + "(5 saat)";
+        if (playTime >= 50) return ChatColor.LIGHT_PURPLE + "LEGEND " + ChatColor.GRAY + "(100 saat)";
+        if (playTime >= 20) return ChatColor.DARK_PURPLE + "MASTER " + ChatColor.GRAY + "(50 saat)";
+        if (playTime >= 5) return ChatColor.BLUE + "CHAMPION " + ChatColor.GRAY + "(20 saat)";
+        return ChatColor.GREEN + "WARRIOR " + ChatColor.GRAY + "(5 saat)";
     }
     
     private void removeAllRanks(Player player) {
-        String[] ranks = {"owner", "admin", "mod", "vip", "legend", "master", "expert", "active"};
+        String[] ranks = {"owner", "admin", "mod", "vip", "legend", "master", "champion", "warrior"};
         for (String rank : ranks) {
             Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "lp user " + player.getName() + " permission unset nexora." + rank);
         }
