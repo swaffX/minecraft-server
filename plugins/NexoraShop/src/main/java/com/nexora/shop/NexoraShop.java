@@ -281,14 +281,15 @@ public class NexoraShop extends JavaPlugin implements Listener {
         
         boolean isShiftClick = event.isShiftClick();
         boolean isLeftClick = event.isLeftClick();
+        boolean isRightClick = event.isRightClick();
         
-        int amount = (isLeftClick || !isShiftClick) ? 1 : 64;
-        
+        // Shift + tık = satış
         if (isShiftClick) {
-            // Satış
+            int amount = isLeftClick ? 1 : 64;
             sellItem(player, shopItem, amount);
         } else {
-            // Alış
+            // Normal tık = alış
+            int amount = isLeftClick ? 1 : 64;
             buyItem(player, shopItem, amount);
         }
     }
