@@ -68,10 +68,12 @@ function initDashboard() {
     updateStatus();
     updateLogs();
     updateSystem();
+    loadServerSettings();
     
     // Auto refresh
     statusInterval = setInterval(updateStatus, 5000);
     setInterval(updateSystem, 10000);
+    setInterval(updateTPS, 5000);
     
     // WebSocket for real-time logs
     connectWebSocket();
@@ -116,6 +118,18 @@ function initDashboard() {
             handlePlayerAction(action);
         });
     });
+    
+    // Quick command buttons
+    document.querySelectorAll('.quick-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+            const action = btn.dataset.action;
+            const value = btn.dataset.value;
+            handleQuickCommand(action, value);
+        });
+    });
+    
+    // Save settings button
+    document.getElementById('save-settings').addEventListener('click', saveServerSettings);
 }
 
 async function updateStatus() {
@@ -235,9 +249,121 @@ async function updateSystem() {
         if (data.disk) {
             document.getElementById('disk-usage').textContent = data.disk;
         }
+        
+        if (data.cpu !== undefined) {
+            document.getElementById('server-cpu').textContent = `${data.cpu}%`;
+        }
     } catch (error) {
         console.error('System update error:', error);
     }
+}
+
+async function updateTPS() {
+    try {
+        const response = await fetch('/api/server/stats');
+        const data = await response.json();
+        
+        if (data.success && data.tps) {
+            const tpsMatch = data.tps.match(/(\d+\.\d+)/);
+            if (tpsMatch) {
+                const tps = parseFloat(tpsMatch[0]);
+                document.getElementById('server-tps').textContent = tps.toFixed(1);
+            }
+        }
+    } catch (error) {
+        console.error('TPS update error:', error);
+    }
+}
+
+async function handleQuickCommand(action, value) {
+    try {
+        const response = await fetch(`/api/quick/${action}`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ [action]: value })
+        });
+        
+        const data = await response.json();
+        
+        if (data.success) {
+            showNotification('Başarılı!', data.message, 'success');
+        } else {
+            showNotification('Hata!', data.error, 'error');
+        }
+    } catch (error) {
+        showNotification('Hata!', 'İşlem başarısız!', 'error');
+    }
+}
+
+async function loadServerSettings() {
+    try {
+        const response = await fetch('/api/server/properties');
+        const data = await response.json();
+        
+        if (data.success) {
+            const config = data.config;
+            document.getElementById('max-players').value = config['max-players'] || 20;
+            document.getElementById('view-distance').value = config['view-distance'] || 10;
+            document.getElementById('pvp-mode').value = config['pvp'] || 'true';
+            document.getElementById('spawn-protection').value = config['spawn-protection'] || 16;
+        }
+    } catch (error) {
+        console.error('Settings load error:', error);
+    }
+}
+
+async function saveServerSettings() {
+    const settings = {
+        'max-players': document.getElementById('max-players').value,
+        'view-distance': document.getElementById('view-distance').value,
+        'pvp': document.getElementById('pvp-mode').value,
+        'spawn-protection': document.getElementById('spawn-protection').value
+    };
+    
+    try {
+        for (const [key, value] of Object.entries(settings)) {
+            const response = await fetch('/api/server/properties', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ key, value })
+            });
+            
+            const data = await response.json();
+            if (!data.success) {
+                throw new Error(data.error);
+            }
+        }
+        
+        showNotification('Başarılı!', 'Ayarlar kaydedildi! Restart gerekli.', 'success');
+    } catch (error) {
+        showNotification('Hata!', 'Ayarlar kaydedilemedi!', 'error');
+    }
+}
+
+function showNotification(title, message, type = 'success') {
+    const notification = document.createElement('div');
+    notification.className = `notification-toast ${type}`;
+    
+    const icons = {
+        success: '✓',
+        error: '✗',
+        warning: '⚠'
+    };
+    
+    notification.innerHTML = `
+        <div class="notification-icon">${icons[type]}</div>
+        <div class="notification-content">
+            <div class="notification-title">${title}</div>
+            <div class="notification-message">${message}</div>
+        </div>
+    `;
+    
+    document.body.appendChild(notification);
+    
+    setTimeout(() => {
+        notification.style.animation = 'slideInRight 0.4s reverse';
+        setTimeout(() => notification.remove(), 400);
+    }, 3000);
 }
 
 async function serverAction(action) {

@@ -258,7 +258,7 @@ app.post('/api/command', requireAuth, async (req, res) => {
 });
 
 app.get('/api/system', requireAuth, (req, res) => {
-    exec('free -m && df -h / && uptime', (error, stdout) => {
+    exec('free -m && df -h / && uptime && top -bn1 | grep "Cpu(s)"', (error, stdout) => {
         if (error) {
             return res.status(500).json({ error: 'Sistem bilgisi alınamadı' });
         }
@@ -266,6 +266,17 @@ app.get('/api/system', requireAuth, (req, res) => {
         const lines = stdout.split('\n');
         const memLine = lines[1].split(/\s+/);
         const diskLine = lines.find(l => l.includes('/dev/'));
+        const uptimeLine = lines.find(l => l.includes('load average'));
+        const cpuLine = lines.find(l => l.includes('Cpu(s)'));
+        
+        // CPU kullanımı hesapla
+        let cpuUsage = 0;
+        if (cpuLine) {
+            const match = cpuLine.match(/(\d+\.\d+)\s*id/);
+            if (match) {
+                cpuUsage = (100 - parseFloat(match[1])).toFixed(1);
+            }
+        }
         
         res.json({
             memory: {
@@ -274,9 +285,133 @@ app.get('/api/system', requireAuth, (req, res) => {
                 free: parseInt(memLine[3])
             },
             disk: diskLine ? diskLine.split(/\s+/)[4] : 'N/A',
-            uptime: lines[lines.length - 1]
+            uptime: uptimeLine || lines[lines.length - 1],
+            cpu: cpuUsage
         });
     });
+});
+
+// TPS ve Server Stats
+app.get('/api/server/stats', requireAuth, async (req, res) => {
+    try {
+        const result = await sendRCONCommand('tps');
+        res.json({ 
+            success: true, 
+            tps: result.response || 'N/A'
+        });
+    } catch (error) {
+        res.json({ success: false, tps: 'N/A' });
+    }
+});
+
+// Oyuncu detayları
+app.get('/api/players/details', requireAuth, async (req, res) => {
+    try {
+        const listResult = await sendRCONCommand('list');
+        res.json({ 
+            success: true, 
+            data: listResult.response 
+        });
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+});
+
+// Whitelist yönetimi
+app.post('/api/whitelist/add', requireAuth, async (req, res) => {
+    const { player } = req.body;
+    if (!player) {
+        return res.status(400).json({ error: 'Oyuncu adı gerekli' });
+    }
+    
+    const result = await sendRCONCommand(`whitelist add ${player}`);
+    if (result.success) {
+        res.json({ success: true, message: `${player} whitelist'e eklendi` });
+    } else {
+        res.status(500).json({ error: result.error });
+    }
+});
+
+app.post('/api/whitelist/remove', requireAuth, async (req, res) => {
+    const { player } = req.body;
+    if (!player) {
+        return res.status(400).json({ error: 'Oyuncu adı gerekli' });
+    }
+    
+    const result = await sendRCONCommand(`whitelist remove ${player}`);
+    if (result.success) {
+        res.json({ success: true, message: `${player} whitelist'ten çıkarıldı` });
+    } else {
+        res.status(500).json({ error: result.error });
+    }
+});
+
+// Hızlı komutlar
+app.post('/api/quick/time', requireAuth, async (req, res) => {
+    const { time } = req.body;
+    const result = await sendRCONCommand(`time set ${time}`);
+    res.json(result.success ? { success: true, message: 'Zaman değiştirildi' } : { error: result.error });
+});
+
+app.post('/api/quick/weather', requireAuth, async (req, res) => {
+    const { weather } = req.body;
+    const result = await sendRCONCommand(`weather ${weather}`);
+    res.json(result.success ? { success: true, message: 'Hava durumu değiştirildi' } : { error: result.error });
+});
+
+app.post('/api/quick/gamemode', requireAuth, async (req, res) => {
+    const { player, mode } = req.body;
+    const result = await sendRCONCommand(`gamemode ${mode} ${player}`);
+    res.json(result.success ? { success: true, message: 'Oyun modu değiştirildi' } : { error: result.error });
+});
+
+app.post('/api/quick/difficulty', requireAuth, async (req, res) => {
+    const { difficulty } = req.body;
+    const result = await sendRCONCommand(`difficulty ${difficulty}`);
+    res.json(result.success ? { success: true, message: 'Zorluk değiştirildi' } : { error: result.error });
+});
+
+// Server properties okuma
+app.get('/api/server/properties', requireAuth, (req, res) => {
+    try {
+        const properties = fs.readFileSync('/opt/minecraft/server.properties', 'utf8');
+        const config = {};
+        properties.split('\n').forEach(line => {
+            if (line && !line.startsWith('#')) {
+                const [key, value] = line.split('=');
+                if (key && value !== undefined) {
+                    config[key.trim()] = value.trim();
+                }
+            }
+        });
+        res.json({ success: true, config });
+    } catch (error) {
+        res.status(500).json({ error: 'Config okunamadı' });
+    }
+});
+
+// Server properties güncelleme
+app.post('/api/server/properties', requireAuth, (req, res) => {
+    const { key, value } = req.body;
+    if (!key || value === undefined) {
+        return res.status(400).json({ error: 'Key ve value gerekli' });
+    }
+    
+    try {
+        let properties = fs.readFileSync('/opt/minecraft/server.properties', 'utf8');
+        const regex = new RegExp(`^${key}=.*$`, 'm');
+        
+        if (regex.test(properties)) {
+            properties = properties.replace(regex, `${key}=${value}`);
+        } else {
+            properties += `\n${key}=${value}`;
+        }
+        
+        fs.writeFileSync('/opt/minecraft/server.properties', properties);
+        res.json({ success: true, message: 'Ayar güncellendi (restart gerekli)' });
+    } catch (error) {
+        res.status(500).json({ error: 'Config güncellenemedi' });
+    }
 });
 
 // WebSocket
