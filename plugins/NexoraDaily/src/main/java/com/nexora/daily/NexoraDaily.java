@@ -266,7 +266,7 @@ public class NexoraDaily extends JavaPlugin implements Listener {
             for (Quest quest : quests) {
                 String status = quest.isCompleted() ? 
                     ChatColor.GREEN + "✓ Tamamlandı" : 
-                    ChatColor.YELLOW + quest.getProgress() + "/" + quest.getTarget();
+                    ChatColor.YELLOW + String.valueOf(quest.getProgress()) + "/" + quest.getTarget();
                 
                 player.sendMessage(ChatColor.GOLD + "#" + questNum + " " + 
                     ChatColor.WHITE + quest.getDescription());
