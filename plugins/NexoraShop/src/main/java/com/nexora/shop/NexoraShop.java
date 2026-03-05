@@ -239,18 +239,28 @@ public class NexoraShop extends JavaPlugin implements Listener {
         }
         
         // Debug log
+        getLogger().info("Title: '" + title + "'");
         getLogger().info("Tıklanan item: " + clicked.getType());
         if (clicked.hasItemMeta() && clicked.getItemMeta().hasDisplayName()) {
             getLogger().info("DisplayName: " + clicked.getItemMeta().getDisplayName());
         }
         
-        // Ana menü
-        if (title.equals(ChatColor.GOLD + "" + ChatColor.BOLD + "🛒 MAĞAZA")) {
+        // Ana menü kontrolü - sadece "🛒 MAĞAZA" içeriyorsa ve kategori adı içermiyorsa
+        boolean isMainMenu = title.contains("🛒 MAĞAZA") && 
+                            !title.contains("BLOKLAR") && 
+                            !title.contains("YEMEK") && 
+                            !title.contains("ALETLER") && 
+                            !title.contains("SİLAHLAR") && 
+                            !title.contains("ZIRH") && 
+                            !title.contains("DİĞER");
+        
+        if (isMainMenu) {
             if (!clicked.hasItemMeta() || !clicked.getItemMeta().hasDisplayName()) {
                 return;
             }
             
             String itemName = clicked.getItemMeta().getDisplayName();
+            getLogger().info("Ana menüde kategori seçildi: " + itemName);
             
             if (itemName.contains("Bloklar")) {
                 openCategoryMenu(player, "Bloklar");
@@ -268,16 +278,13 @@ public class NexoraShop extends JavaPlugin implements Listener {
             return;
         }
         
-        // Kategori menüsü - Geri dön butonu kontrolü (önce)
+        // Kategori menüsü - Geri dön butonu kontrolü
         if (clicked.hasItemMeta() && clicked.getItemMeta().hasDisplayName()) {
             String displayName = clicked.getItemMeta().getDisplayName();
-            getLogger().info("Kontrol ediliyor: '" + displayName + "'");
-            
-            // ChatColor'ları temizleyerek kontrol et
             String cleanName = ChatColor.stripColor(displayName);
             getLogger().info("Temiz isim: '" + cleanName + "'");
             
-            if (cleanName.contains("Geri") || displayName.contains("Geri")) {
+            if (cleanName.contains("Geri") || cleanName.contains("geri")) {
                 getLogger().info("Geri dön butonu tespit edildi!");
                 openShopMenu(player);
                 return;
@@ -295,15 +302,18 @@ public class NexoraShop extends JavaPlugin implements Listener {
         
         boolean isShiftClick = event.isShiftClick();
         boolean isLeftClick = event.isLeftClick();
-        boolean isRightClick = event.isRightClick();
+        
+        getLogger().info("Shift: " + isShiftClick + ", Left: " + isLeftClick);
         
         // Shift + tık = satış
         if (isShiftClick) {
             int amount = isLeftClick ? 1 : 64;
+            getLogger().info("Satış işlemi: " + amount + " adet");
             sellItem(player, shopItem, amount);
         } else {
             // Normal tık = alış
             int amount = isLeftClick ? 1 : 64;
+            getLogger().info("Alış işlemi: " + amount + " adet");
             buyItem(player, shopItem, amount);
         }
     }
