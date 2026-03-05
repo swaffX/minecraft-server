@@ -238,6 +238,12 @@ public class NexoraShop extends JavaPlugin implements Listener {
             return;
         }
         
+        // Debug log
+        getLogger().info("Tıklanan item: " + clicked.getType());
+        if (clicked.hasItemMeta() && clicked.getItemMeta().hasDisplayName()) {
+            getLogger().info("DisplayName: " + clicked.getItemMeta().getDisplayName());
+        }
+        
         // Ana menü
         if (title.equals(ChatColor.GOLD + "" + ChatColor.BOLD + "🛒 MAĞAZA")) {
             if (!clicked.hasItemMeta() || !clicked.getItemMeta().hasDisplayName()) {
@@ -265,7 +271,14 @@ public class NexoraShop extends JavaPlugin implements Listener {
         // Kategori menüsü - Geri dön butonu kontrolü (önce)
         if (clicked.hasItemMeta() && clicked.getItemMeta().hasDisplayName()) {
             String displayName = clicked.getItemMeta().getDisplayName();
-            if (displayName.contains("Geri Dön") || displayName.contains("Geri")) {
+            getLogger().info("Kontrol ediliyor: '" + displayName + "'");
+            
+            // ChatColor'ları temizleyerek kontrol et
+            String cleanName = ChatColor.stripColor(displayName);
+            getLogger().info("Temiz isim: '" + cleanName + "'");
+            
+            if (cleanName.contains("Geri") || displayName.contains("Geri")) {
+                getLogger().info("Geri dön butonu tespit edildi!");
                 openShopMenu(player);
                 return;
             }
@@ -276,6 +289,7 @@ public class NexoraShop extends JavaPlugin implements Listener {
         ShopItem shopItem = shopItems.get(material);
         
         if (shopItem == null) {
+            getLogger().info("ShopItem bulunamadı: " + material);
             return;
         }
         
