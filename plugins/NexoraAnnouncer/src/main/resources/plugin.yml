@@ -1,0 +1,6 @@
+name: NexoraAnnouncer
+version: '1.0.0'
+main: com.nexora.announcer.NexoraAnnouncer
+api-version: '1.21'
+author: Nexora
+description: Otomatik duyuru sistemi

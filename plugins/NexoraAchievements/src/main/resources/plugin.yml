@@ -1,0 +1,13 @@
+name: NexoraAchievements
+version: '1.0.0'
+main: com.nexora.achievements.NexoraAchievements
+api-version: '1.21'
+depend: [NexoraEconomy]
+author: Nexora
+description: Başarı sistemi
+
+commands:
+  achievements:
+    description: Başarılarını göster
+    usage: /achievements
+    aliases: [achievement, başarılar, başarı]

@@ -40,3 +40,23 @@ plugins/*
 # NexoraEconomy plugin kaynak kodlarını tut
 !plugins/NexoraEconomy/
 !plugins/NexoraEconomy/**
+
+# NexoraShop plugin kaynak kodlarını tut
+!plugins/NexoraShop/
+!plugins/NexoraShop/**
+
+# NexoraDaily plugin kaynak kodlarını tut
+!plugins/NexoraDaily/
+!plugins/NexoraDaily/**
+
+# NexoraAnnouncer plugin kaynak kodlarını tut
+!plugins/NexoraAnnouncer/
+!plugins/NexoraAnnouncer/**
+
+# NexoraAchievements plugin kaynak kodlarını tut
+!plugins/NexoraAchievements/
+!plugins/NexoraAchievements/**
+
+# NexoraParty plugin kaynak kodlarını tut
+!plugins/NexoraParty/
+!plugins/NexoraParty/**

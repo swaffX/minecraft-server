@@ -70,3 +70,25 @@ systemctl status minecraft-bot
 - ✅ Oyuncu giriş/çıkış logları
 - ✅ Sunucu durumu (online/offline)
 - ✅ Oyuncu sayısı, ping, uptime
+- ✅ `/stats` komutu ile oyuncu istatistikleri
+
+## Komutlar
+
+### /stats [oyuncu]
+Minecraft oyuncu istatistiklerini gösterir.
+
+- İlk kullanımda Minecraft oyuncu adını belirtmelisin: `/stats oyuncu:OyuncuAdın`
+- Sonraki kullanımlarda otomatik olarak kayıtlı oyuncu adını kullanır: `/stats`
+- Discord hesabını Minecraft hesabına bağlar
+- Oyuncu durumunu (çevrimiçi/çevrimdışı) gösterir
+- Oyuncu avatarını gösterir
+
+## Yapılandırma
+
+`.env` dosyası oluştur:
+```env
+DISCORD_BOT_TOKEN=your_bot_token_here
+RCON_PASSWORD=your_rcon_password_here
+```
+
+RCON şifresi sunucunun `server.properties` dosyasındaki `rcon.password` ile aynı olmalı.

@@ -1,0 +1,12 @@
+name: NexoraParty
+version: '1.0.0'
+main: com.nexora.party.NexoraParty
+api-version: '1.21'
+author: Nexora
+description: Parti sistemi
+
+commands:
+  party:
+    description: Parti komutları
+    usage: /party <create|invite|accept|leave|kick|list>
+    aliases: [p, parti]

@@ -1,0 +1,13 @@
+name: NexoraDaily
+version: '1.0.0'
+main: com.nexora.daily.NexoraDaily
+api-version: '1.21'
+depend: [NexoraEconomy]
+author: Nexora
+description: Günlük görev sistemi
+
+commands:
+  quests:
+    description: Günlük görevleri göster
+    usage: /quests
+    aliases: [quest, görevler, görev]
