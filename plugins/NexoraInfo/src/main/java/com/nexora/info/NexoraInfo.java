@@ -16,10 +16,11 @@ public class NexoraInfo extends JavaPlugin implements Listener {
         getLogger().info("Nexora Info Plugin aktif!");
         Bukkit.getPluginManager().registerEvents(this, this);
         
-        // Her saniye scoreboard güncelle
+        // Her saniye scoreboard ve TAB listesini güncelle
         Bukkit.getScheduler().runTaskTimer(this, () -> {
             for (Player player : Bukkit.getOnlinePlayers()) {
                 updateScoreboard(player);
+                updateTabList(player);
             }
         }, 0L, 20L); // 20 tick = 1 saniye
     }
@@ -53,6 +54,9 @@ public class NexoraInfo extends JavaPlugin implements Listener {
         
         // Scoreboard oluştur
         updateScoreboard(player);
+        
+        // TAB listesini güncelle
+        updateTabList(player);
     }
     
     private void updateScoreboard(Player player) {
@@ -121,5 +125,52 @@ public class NexoraInfo extends JavaPlugin implements Listener {
         } else {
             return ChatColor.DARK_GRAY + "🌙 Gece Yarısı";
         }
+    }
+    
+    private void updateTabList(Player player) {
+        // Header (Üst kısım)
+        String header = "\n" +
+            ChatColor.AQUA + "" + ChatColor.BOLD + "✦ NEXORA MINECRAFT ✦\n" +
+            ChatColor.GRAY + "194.105.5.37\n" +
+            ChatColor.DARK_GRAY + "▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬\n";
+        
+        // Footer (Alt kısım)
+        int onlinePlayers = Bukkit.getOnlinePlayers().size();
+        int maxPlayers = Bukkit.getMaxPlayers();
+        
+        // TPS hesaplama (Paper API)
+        double tps = 20.0;
+        try {
+            tps = Bukkit.getTPS()[0]; // Son 1 dakika TPS
+        } catch (Exception e) {
+            // TPS API yoksa varsayılan 20.0
+        }
+        
+        String tpsColor;
+        if (tps >= 19.0) {
+            tpsColor = ChatColor.GREEN + "";
+        } else if (tps >= 17.0) {
+            tpsColor = ChatColor.YELLOW + "";
+        } else {
+            tpsColor = ChatColor.RED + "";
+        }
+        
+        // Oyuncu pingleri
+        int totalPing = 0;
+        for (Player p : Bukkit.getOnlinePlayers()) {
+            totalPing += p.getPing();
+        }
+        int avgPing = onlinePlayers > 0 ? totalPing / onlinePlayers : 0;
+        
+        String footer = "\n" +
+            ChatColor.DARK_GRAY + "▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬\n" +
+            ChatColor.WHITE + "👥 Oyuncular: " + ChatColor.AQUA + onlinePlayers + ChatColor.GRAY + "/" + ChatColor.AQUA + maxPlayers +
+            ChatColor.DARK_GRAY + " | " +
+            ChatColor.WHITE + "⚡ TPS: " + tpsColor + String.format("%.1f", tps) +
+            ChatColor.DARK_GRAY + " | " +
+            ChatColor.WHITE + "📶 Ort. Ping: " + ChatColor.AQUA + avgPing + "ms\n" +
+            ChatColor.GRAY + "İyi oyunlar! " + ChatColor.GOLD + "❤\n";
+        
+        player.setPlayerListHeaderFooter(header, footer);
     }
 }
