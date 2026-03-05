@@ -96,20 +96,14 @@ public class NexoraRanks extends JavaPlugin implements Listener {
             
             // Yeni yetki ver
             switch (rank) {
-                case "owner":
-                    Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "lp user " + target.getName() + " permission set nexora.owner true");
-                    break;
-                case "admin":
-                    Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "lp user " + target.getName() + " permission set nexora.admin true");
-                    break;
-                case "mod":
-                    Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "lp user " + target.getName() + " permission set nexora.mod true");
+                case "developer":
+                    Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "lp user " + target.getName() + " permission set nexora.developer true");
                     break;
                 case "vip":
                     Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "lp user " + target.getName() + " permission set nexora.vip true");
                     break;
                 default:
-                    sender.sendMessage(ChatColor.RED + "✗ Geçersiz rütbe! (owner, admin, mod, vip)");
+                    sender.sendMessage(ChatColor.RED + "✗ Geçersiz rütbe! (developer, vip)");
                     return true;
             }
             
@@ -124,9 +118,7 @@ public class NexoraRanks extends JavaPlugin implements Listener {
     
     private void updateRank(Player player) {
         // Manuel rütbesi varsa otomatik rütbe verme
-        if (player.hasPermission("nexora.owner") || 
-            player.hasPermission("nexora.admin") || 
-            player.hasPermission("nexora.mod") || 
+        if (player.hasPermission("nexora.developer") || 
             player.hasPermission("nexora.vip")) {
             return;
         }
@@ -162,9 +154,7 @@ public class NexoraRanks extends JavaPlugin implements Listener {
     }
     
     private String getRankName(Player player) {
-        if (player.hasPermission("nexora.owner")) return "OWNER";
-        if (player.hasPermission("nexora.admin")) return "ADMIN";
-        if (player.hasPermission("nexora.mod")) return "MODERATOR";
+        if (player.hasPermission("nexora.developer")) return "DEVELOPER";
         if (player.hasPermission("nexora.vip")) return "VIP";
         if (player.hasPermission("nexora.legend")) return "LEGEND";
         if (player.hasPermission("nexora.master")) return "MASTER";
@@ -174,22 +164,19 @@ public class NexoraRanks extends JavaPlugin implements Listener {
     }
     
     private String getRankColor(Player player) {
-        if (player.hasPermission("nexora.owner")) return ChatColor.DARK_RED + "" + ChatColor.BOLD;
-        if (player.hasPermission("nexora.admin")) return ChatColor.RED + "" + ChatColor.BOLD;
-        if (player.hasPermission("nexora.mod")) return ChatColor.GOLD + "" + ChatColor.BOLD;
+        if (player.hasPermission("nexora.developer")) return ChatColor.DARK_RED + "" + ChatColor.BOLD;
         if (player.hasPermission("nexora.vip")) return ChatColor.AQUA + "" + ChatColor.BOLD;
         if (player.hasPermission("nexora.legend")) return ChatColor.LIGHT_PURPLE + "" + ChatColor.BOLD;
         if (player.hasPermission("nexora.master")) return ChatColor.DARK_PURPLE + "" + ChatColor.BOLD;
-        if (player.hasPermission("nexora.expert")) return ChatColor.BLUE + "" + ChatColor.BOLD;
-        if (player.hasPermission("nexora.active")) return ChatColor.GREEN + "" + ChatColor.BOLD;
+        if (player.hasPermission("nexora.champion")) return ChatColor.BLUE + "" + ChatColor.BOLD;
+        if (player.hasPermission("nexora.warrior")) return ChatColor.GREEN + "" + ChatColor.BOLD;
         return ChatColor.GRAY + "";
     }
     
     private String getNextRank(Player player) {
         int playTime = player.getStatistic(Statistic.PLAY_ONE_MINUTE) / 20 / 3600;
         
-        if (player.hasPermission("nexora.owner") || player.hasPermission("nexora.admin") || 
-            player.hasPermission("nexora.mod") || player.hasPermission("nexora.vip")) {
+        if (player.hasPermission("nexora.developer") || player.hasPermission("nexora.vip")) {
             return ChatColor.GOLD + "Manuel Rütbe";
         }
         
@@ -201,7 +188,7 @@ public class NexoraRanks extends JavaPlugin implements Listener {
     }
     
     private void removeAllRanks(Player player) {
-        String[] ranks = {"owner", "admin", "mod", "vip", "legend", "master", "champion", "warrior"};
+        String[] ranks = {"developer", "vip", "legend", "master", "champion", "warrior"};
         for (String rank : ranks) {
             Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "lp user " + player.getName() + " permission unset nexora." + rank);
         }

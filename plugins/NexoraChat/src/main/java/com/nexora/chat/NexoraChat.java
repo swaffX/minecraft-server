@@ -73,12 +73,8 @@ public class NexoraChat extends JavaPlugin implements Listener {
     
     private String getRank(Player player) {
         // Rütbe kontrolü (NexoraRanks ile entegre)
-        if (player.hasPermission("nexora.owner")) {
-            return ChatColor.DARK_RED + "" + ChatColor.BOLD + "[OWNER]";
-        } else if (player.hasPermission("nexora.admin")) {
-            return ChatColor.RED + "" + ChatColor.BOLD + "[ADMIN]";
-        } else if (player.hasPermission("nexora.mod")) {
-            return ChatColor.GOLD + "" + ChatColor.BOLD + "[MOD]";
+        if (player.hasPermission("nexora.developer")) {
+            return ChatColor.DARK_RED + "" + ChatColor.BOLD + "[DEVELOPER]";
         } else if (player.hasPermission("nexora.vip")) {
             return ChatColor.AQUA + "" + ChatColor.BOLD + "[VIP]";
         } else if (player.hasPermission("nexora.legend")) {

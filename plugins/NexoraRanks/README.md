@@ -19,16 +19,12 @@
 5. **LEGEND** - 100+ saat (Açık Mor, Kalın)
 
 ## Manuel Rütbeler
-- **OWNER** - Kırmızı koyu, kalın
-- **ADMIN** - Kırmızı, kalın
-- **MOD** - Altın, kalın
+- **DEVELOPER** - Kırmızı koyu, kalın (Geliştirici)
 - **VIP** - Aqua, kalın
 
 ## Yetkiler
 - `nexoraranks.setrank` - Manuel rütbe verme (varsayılan: op)
-- `nexora.owner` - Owner rütbesi
-- `nexora.admin` - Admin rütbesi
-- `nexora.mod` - Moderatör rütbesi
+- `nexora.developer` - Developer rütbesi
 - `nexora.vip` - VIP rütbesi
 
 ## Kurulum
@@ -36,6 +32,12 @@
 2. LuckPerms yükle (yetki yönetimi için)
 3. Sunucuyu yeniden başlat
 4. Rütbeler otomatik olarak verilir
+
+## Rütbe Verme
+```
+/setrank <oyuncu> developer
+/setrank <oyuncu> vip
+```
 
 ## Not
 Manuel rütbe verilen oyunculara otomatik rütbe verilmez.
