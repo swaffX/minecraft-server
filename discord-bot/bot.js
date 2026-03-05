@@ -189,7 +189,8 @@ client.once('ready', async () => {
     client.user.setPresence({
         activities: [{
             name: 'made by swaff',
-            type: 0 // 0 = Playing
+            type: 1, // 1 = Streaming
+            url: 'https://www.twitch.tv/swaffval'
         }],
         status: 'online'
     });
