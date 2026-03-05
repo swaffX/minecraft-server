@@ -63,13 +63,8 @@ public class NexoraInfo extends JavaPlugin implements Listener {
         ScoreboardManager manager = Bukkit.getScoreboardManager();
         Scoreboard board = manager.getNewScoreboard();
         
-        Objective objective = board.registerNewObjective("nexora", "dummy", 
-            ChatColor.AQUA + "" + ChatColor.BOLD + "✦ NEXORA ✦");
+        Objective objective = board.registerNewObjective("nexora", "dummy", "");
         objective.setDisplaySlot(DisplaySlot.SIDEBAR);
-        
-        // Boşluk
-        Score space1 = objective.getScore(ChatColor.DARK_GRAY + "");
-        space1.setScore(7);
         
         // Oyuncu sayısı
         int onlinePlayers = Bukkit.getOnlinePlayers().size();
@@ -86,8 +81,8 @@ public class NexoraInfo extends JavaPlugin implements Listener {
         dayTime.setScore(5);
         
         // Boşluk
-        Score space2 = objective.getScore(ChatColor.DARK_GRAY + " ");
-        space2.setScore(4);
+        Score space = objective.getScore(ChatColor.DARK_GRAY + "");
+        space.setScore(4);
         
         // Koordinatlar
         int x = player.getLocation().getBlockX();
