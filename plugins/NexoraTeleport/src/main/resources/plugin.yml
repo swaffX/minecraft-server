@@ -1,0 +1,23 @@
+name: NexoraTeleport
+version: '1.0.0'
+main: com.nexora.teleport.NexoraTeleport
+api-version: '1.21'
+author: Nexora
+description: Teleport istek sistemi
+
+commands:
+  tpa:
+    description: Oyuncuya teleport isteği gönder
+    usage: /tpa <oyuncu>
+    aliases: [tprequest]
+  tpaccept:
+    description: Teleport isteğini kabul et
+    usage: /tpaccept
+    aliases: [tpyes, tpkabul]
+  tpdeny:
+    description: Teleport isteğini reddet
+    usage: /tpdeny
+    aliases: [tpno, tpred]
+  tpahere:
+    description: Oyuncuyu yanına çağır
+    usage: /tpahere <oyuncu>

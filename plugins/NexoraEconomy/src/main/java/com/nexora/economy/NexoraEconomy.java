@@ -5,12 +5,15 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.Material;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.File;
@@ -29,9 +32,38 @@ public class NexoraEconomy extends JavaPlugin implements Listener {
     private Gson gson = new GsonBuilder().setPrettyPrinting().create();
     private File dataFile;
     
+    // Fiyatlar
     private static final double STARTING_BALANCE = 1000.0;
     private static final double DAILY_REWARD = 500.0;
     private static final long DAILY_COOLDOWN = 24 * 60 * 60 * 1000; // 24 saat
+    
+    // Otomatik satış fiyatları
+    private static final Map<Material, Double> AUTO_SELL_PRICES = new HashMap<>();
+    
+    static {
+        // Değerli madenler
+        AUTO_SELL_PRICES.put(Material.DIAMOND, 100.0);
+        AUTO_SELL_PRICES.put(Material.GOLD_INGOT, 50.0);
+        AUTO_SELL_PRICES.put(Material.IRON_INGOT, 20.0);
+        AUTO_SELL_PRICES.put(Material.EMERALD, 150.0);
+        AUTO_SELL_PRICES.put(Material.NETHERITE_INGOT, 500.0);
+        
+        // Cevherler
+        AUTO_SELL_PRICES.put(Material.DIAMOND_ORE, 100.0);
+        AUTO_SELL_PRICES.put(Material.DEEPSLATE_DIAMOND_ORE, 100.0);
+        AUTO_SELL_PRICES.put(Material.GOLD_ORE, 50.0);
+        AUTO_SELL_PRICES.put(Material.DEEPSLATE_GOLD_ORE, 50.0);
+        AUTO_SELL_PRICES.put(Material.IRON_ORE, 20.0);
+        AUTO_SELL_PRICES.put(Material.DEEPSLATE_IRON_ORE, 20.0);
+        AUTO_SELL_PRICES.put(Material.EMERALD_ORE, 150.0);
+        AUTO_SELL_PRICES.put(Material.DEEPSLATE_EMERALD_ORE, 150.0);
+        AUTO_SELL_PRICES.put(Material.COAL_ORE, 5.0);
+        AUTO_SELL_PRICES.put(Material.DEEPSLATE_COAL_ORE, 5.0);
+        AUTO_SELL_PRICES.put(Material.LAPIS_ORE, 10.0);
+        AUTO_SELL_PRICES.put(Material.DEEPSLATE_LAPIS_ORE, 10.0);
+        AUTO_SELL_PRICES.put(Material.REDSTONE_ORE, 8.0);
+        AUTO_SELL_PRICES.put(Material.DEEPSLATE_REDSTONE_ORE, 8.0);
+    }
     
     @Override
     public void onEnable() {
@@ -75,6 +107,26 @@ public class NexoraEconomy extends JavaPlugin implements Listener {
             player.sendMessage(ChatColor.GREEN + "✓ Hoşgeldin! Başlangıç paran: " + 
                 ChatColor.GOLD + formatMoney(STARTING_BALANCE));
         }
+    }
+    
+    @EventHandler
+    public void onBlockBreak(BlockBreakEvent event) {
+        Player player = event.getPlayer();
+        Material blockType = event.getBlock().getType();
+        
+        // Otomatik satış kontrolü
+        if (AUTO_SELL_PRICES.containsKey(blockType)) {
+            double price = AUTO_SELL_PRICES.get(blockType);
+            addBalance(player.getUniqueId(), price);
+            
+            player.sendMessage(ChatColor.GOLD + "💰 +" + formatMoney(price) + 
+                ChatColor.GRAY + " (" + getBlockName(blockType) + ")");
+        }
+    }
+    
+    private String getBlockName(Material material) {
+        String name = material.name().toLowerCase().replace("_", " ");
+        return name.substring(0, 1).toUpperCase() + name.substring(1);
     }
     
     // API Methods

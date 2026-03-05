@@ -60,3 +60,7 @@ plugins/*
 # NexoraParty plugin kaynak kodlarını tut
 !plugins/NexoraParty/
 !plugins/NexoraParty/**
+
+# NexoraTeleport plugin kaynak kodlarını tut
+!plugins/NexoraTeleport/
+!plugins/NexoraTeleport/**
