@@ -69,6 +69,7 @@ function initDashboard() {
     updateLogs();
     updateSystem();
     loadServerSettings();
+    initCharts();
     
     // Auto refresh
     statusInterval = setInterval(updateStatus, 5000);
@@ -244,6 +245,16 @@ async function updateSystem() {
             document.getElementById('ram-progress').style.width = `${usedPercent}%`;
             document.getElementById('ram-text').textContent = 
                 `${data.memory.used}MB / ${data.memory.total}MB (${usedPercent}%)`;
+            
+            const ramUsageText = document.getElementById('ram-usage-text');
+            if (ramUsageText) {
+                ramUsageText.textContent = `${data.memory.used} MB`;
+            }
+            
+            // Update charts
+            const tps = document.getElementById('server-tps').textContent;
+            const cpu = data.cpu || 0;
+            updateCharts(tps, cpu, data.memory.used, data.memory.total);
         }
         
         if (data.disk) {
@@ -521,3 +532,122 @@ async function sendCommand() {
     }
 }
 
+
+
+// Charts
+let performanceChart = null;
+let resourceChart = null;
+const performanceData = {
+    tps: [],
+    cpu: [],
+    labels: []
+};
+
+function initCharts() {
+    // Performance Chart (TPS & CPU)
+    const perfCtx = document.getElementById('performanceChart');
+    if (perfCtx) {
+        performanceChart = new Chart(perfCtx, {
+            type: 'line',
+            data: {
+                labels: [],
+                datasets: [{
+                    label: 'TPS',
+                    data: [],
+                    borderColor: '#00d9ff',
+                    backgroundColor: 'rgba(0, 217, 255, 0.1)',
+                    tension: 0.4,
+                    fill: true
+                }, {
+                    label: 'CPU %',
+                    data: [],
+                    borderColor: '#f59e0b',
+                    backgroundColor: 'rgba(245, 158, 11, 0.1)',
+                    tension: 0.4,
+                    fill: true
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        labels: { color: '#fff', font: { size: 14, weight: '600' } }
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        max: 100,
+                        grid: { color: 'rgba(255, 255, 255, 0.1)' },
+                        ticks: { color: '#fff' }
+                    },
+                    x: {
+                        grid: { color: 'rgba(255, 255, 255, 0.1)' },
+                        ticks: { color: '#fff' }
+                    }
+                }
+            }
+        });
+    }
+    
+    // Resource Chart (RAM & Disk)
+    const resCtx = document.getElementById('resourceChart');
+    if (resCtx) {
+        resourceChart = new Chart(resCtx, {
+            type: 'doughnut',
+            data: {
+                labels: ['Kullanılan RAM', 'Boş RAM'],
+                datasets: [{
+                    data: [0, 100],
+                    backgroundColor: [
+                        'rgba(124, 58, 237, 0.8)',
+                        'rgba(255, 255, 255, 0.1)'
+                    ],
+                    borderColor: [
+                        '#7c3aed',
+                        'rgba(255, 255, 255, 0.2)'
+                    ],
+                    borderWidth: 2
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        labels: { color: '#fff', font: { size: 14, weight: '600' } }
+                    }
+                }
+            }
+        });
+    }
+}
+
+function updateCharts(tps, cpu, ramUsed, ramTotal) {
+    const now = new Date().toLocaleTimeString();
+    
+    // Performance chart
+    if (performanceChart) {
+        performanceChart.data.labels.push(now);
+        performanceChart.data.datasets[0].data.push(parseFloat(tps) || 20);
+        performanceChart.data.datasets[1].data.push(parseFloat(cpu) || 0);
+        
+        // Keep last 20 data points
+        if (performanceChart.data.labels.length > 20) {
+            performanceChart.data.labels.shift();
+            performanceChart.data.datasets[0].data.shift();
+            performanceChart.data.datasets[1].data.shift();
+        }
+        
+        performanceChart.update('none');
+    }
+    
+    // Resource chart
+    if (resourceChart && ramUsed && ramTotal) {
+        const used = parseInt(ramUsed);
+        const total = parseInt(ramTotal);
+        resourceChart.data.datasets[0].data = [used, total - used];
+        resourceChart.update('none');
+    }
+}

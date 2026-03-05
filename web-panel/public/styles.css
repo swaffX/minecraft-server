@@ -363,8 +363,8 @@ body {
 
 /* Main Content */
 .main-content {
-  padding: 2.5rem;
-  max-width: 1800px;
+  padding: 3rem 4rem;
+  max-width: 2200px;
   margin: 0 auto;
 }
 
@@ -1320,4 +1320,73 @@ body {
 .notification-message {
   font-size: 0.9rem;
   color: var(--text-secondary);
+}
+
+/* Wide Stats Grid */
+.stats-grid-wide {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+  gap: 2.5rem;
+  margin-bottom: 3rem;
+}
+
+.stat-card-wide {
+  background: var(--glass);
+  backdrop-filter: blur(30px) saturate(180%);
+  border: 1px solid var(--glass-border);
+  border-radius: 25px;
+  padding: 3rem;
+  display: flex;
+  align-items: center;
+  gap: 2rem;
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+  position: relative;
+  overflow: hidden;
+  min-height: 160px;
+}
+
+.stat-card-wide:hover {
+  transform: translateY(-10px);
+  box-shadow: 0 25px 60px rgba(0, 0, 0, 0.5);
+  border-color: rgba(255, 255, 255, 0.25);
+}
+
+/* Charts */
+.charts-row {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(600px, 1fr));
+  gap: 3rem;
+  margin-bottom: 3rem;
+}
+
+.chart-card {
+  min-height: 450px;
+}
+
+.chart-card .card-body {
+  padding: 3rem;
+  height: 400px;
+}
+
+.chart-card canvas {
+  max-height: 100%;
+  width: 100% !important;
+}
+
+/* Success Icon */
+.success-icon {
+  background: linear-gradient(135deg, rgba(16, 185, 129, 0.3), rgba(16, 185, 129, 0.1));
+  color: var(--success);
+}
+
+/* Wider layouts */
+@media (min-width: 1400px) {
+  .stats-grid-wide {
+    grid-template-columns: repeat(5, 1fr);
+  }
+  
+  .charts-row {
+    grid-template-columns: repeat(2, 1fr);
+  }
 }
