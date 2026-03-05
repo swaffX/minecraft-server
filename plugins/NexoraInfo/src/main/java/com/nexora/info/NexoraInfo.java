@@ -65,58 +65,46 @@ public class NexoraInfo extends JavaPlugin implements Listener {
         
         // Boşluk
         Score space1 = objective.getScore(ChatColor.DARK_GRAY + "");
-        space1.setScore(15);
+        space1.setScore(10);
         
         // Oyuncu sayısı
         int onlinePlayers = Bukkit.getOnlinePlayers().size();
         int maxPlayers = Bukkit.getMaxPlayers();
-        Score players = objective.getScore(ChatColor.WHITE + "👥 Oyuncular: " + ChatColor.AQUA + onlinePlayers + ChatColor.GRAY + "/" + ChatColor.AQUA + maxPlayers);
-        players.setScore(14);
+        Score players = objective.getScore(ChatColor.WHITE + "👥 " + ChatColor.AQUA + onlinePlayers + ChatColor.GRAY + "/" + ChatColor.AQUA + maxPlayers);
+        players.setScore(9);
+        
+        // Dünya günü ve zaman
+        long worldTime = player.getWorld().getFullTime();
+        long day = (worldTime / 24000) + 1;
+        long timeOfDay = player.getWorld().getTime();
+        String timeString = getTimeString(timeOfDay);
+        Score dayTime = objective.getScore(ChatColor.WHITE + "📅 " + ChatColor.AQUA + "Gün " + day + " " + timeString);
+        dayTime.setScore(8);
         
         // Boşluk
         Score space2 = objective.getScore(ChatColor.DARK_GRAY + " ");
-        space2.setScore(13);
-        
-        // Dünya günü
-        long worldTime = player.getWorld().getFullTime();
-        long day = (worldTime / 24000) + 1;
-        Score dayScore = objective.getScore(ChatColor.WHITE + "📅 Gün: " + ChatColor.AQUA + day);
-        dayScore.setScore(12);
-        
-        // Zaman dilimi
-        long timeOfDay = player.getWorld().getTime();
-        String timeString = getTimeString(timeOfDay);
-        Score timeScore = objective.getScore(ChatColor.WHITE + "🕐 " + timeString);
-        timeScore.setScore(11);
-        
-        // Boşluk
-        Score space3 = objective.getScore(ChatColor.DARK_GRAY + "  ");
-        space3.setScore(10);
+        space2.setScore(7);
         
         // Koordinatlar
         int x = player.getLocation().getBlockX();
         int y = player.getLocation().getBlockY();
         int z = player.getLocation().getBlockZ();
         Score coords = objective.getScore(ChatColor.WHITE + "📍 " + ChatColor.GRAY + x + ", " + y + ", " + z);
-        coords.setScore(9);
-        
-        // Boşluk
-        Score space4 = objective.getScore(ChatColor.DARK_GRAY + "   ");
-        space4.setScore(8);
+        coords.setScore(6);
         
         // Ping
         int ping = player.getPing();
         String pingColor = ping < 50 ? ChatColor.GREEN + "" : ping < 100 ? ChatColor.YELLOW + "" : ChatColor.RED + "";
-        Score pingScore = objective.getScore(ChatColor.WHITE + "📶 Ping: " + pingColor + ping + "ms");
-        pingScore.setScore(7);
+        Score pingScore = objective.getScore(ChatColor.WHITE + "📶 " + pingColor + ping + "ms");
+        pingScore.setScore(5);
         
         // Boşluk
-        Score space5 = objective.getScore(ChatColor.DARK_GRAY + "    ");
-        space5.setScore(6);
+        Score space3 = objective.getScore(ChatColor.DARK_GRAY + "  ");
+        space3.setScore(4);
         
         // IP
         Score ip = objective.getScore(ChatColor.GRAY + "194.105.5.37");
-        ip.setScore(5);
+        ip.setScore(3);
         
         player.setScoreboard(board);
     }
