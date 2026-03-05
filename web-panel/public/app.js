@@ -89,12 +89,20 @@ function initDashboard() {
     });
     
     // Console command handler
-    document.getElementById('send-command').addEventListener('click', sendCommand);
-    document.getElementById('console-command').addEventListener('keypress', (e) => {
-        if (e.key === 'Enter') {
-            sendCommand();
-        }
-    });
+    const sendCommandBtn = document.getElementById('send-command');
+    const consoleCommand = document.getElementById('console-command');
+    
+    if (sendCommandBtn) {
+        sendCommandBtn.addEventListener('click', sendCommand);
+    }
+    
+    if (consoleCommand) {
+        consoleCommand.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                sendCommand();
+            }
+        });
+    }
     
     // Modal handlers
     const modal = document.getElementById('player-modal');
@@ -144,6 +152,11 @@ async function updateStatus() {
         const versionEl = document.getElementById('server-version');
         const playersListEl = document.getElementById('players-list');
         
+        if (!statusEl || !playerCountEl || !playersListEl) {
+            console.error('Required elements not found');
+            return;
+        }
+        
         serverOnline = data.online;
         updateButtonStates();
         
@@ -151,8 +164,8 @@ async function updateStatus() {
             statusEl.textContent = '🟢 Çevrimiçi';
             statusEl.className = 'stat-value status-online';
             playerCountEl.textContent = `${data.players.online}/${data.players.max}`;
-            pingEl.textContent = `${data.ping}ms`;
-            versionEl.textContent = data.version;
+            if (pingEl) pingEl.textContent = `${data.ping}ms`;
+            if (versionEl) versionEl.textContent = data.version;
             
             // Players list
             if (data.players.list && data.players.list.length > 0) {
@@ -217,8 +230,8 @@ async function updateStatus() {
             statusEl.textContent = '🔴 Çevrimdışı';
             statusEl.className = 'stat-value status-offline';
             playerCountEl.textContent = '-/-';
-            pingEl.textContent = '- ms';
-            versionEl.textContent = '-';
+            if (pingEl) pingEl.textContent = '- ms';
+            if (versionEl) versionEl.textContent = '-';
             playersListEl.innerHTML = `
                 <div class="empty-state">
                     <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
@@ -241,11 +254,17 @@ async function updateLogs() {
     try {
         const response = await fetch('/api/logs?lines=100');
         const data = await response.json();
-        document.getElementById('logs-content').textContent = data.logs;
+        const logsContent = document.getElementById('logs-content');
+        const logsContainer = document.getElementById('logs-container');
+        
+        if (logsContent) {
+            logsContent.textContent = data.logs;
+        }
         
         // Scroll to bottom
-        const logsContainer = document.getElementById('logs-container');
-        logsContainer.scrollTop = logsContainer.scrollHeight;
+        if (logsContainer) {
+            logsContainer.scrollTop = logsContainer.scrollHeight;
+        }
     } catch (error) {
         console.error('Logs update error:', error);
     }
@@ -258,27 +277,39 @@ async function updateSystem() {
         
         if (data.memory) {
             const usedPercent = (data.memory.used / data.memory.total * 100).toFixed(1);
-            document.getElementById('ram-progress').style.width = `${usedPercent}%`;
-            document.getElementById('ram-text').textContent = 
-                `${data.memory.used}MB / ${data.memory.total}MB (${usedPercent}%)`;
-            
+            const ramProgress = document.getElementById('ram-progress');
+            const ramText = document.getElementById('ram-text');
             const ramUsageText = document.getElementById('ram-usage-text');
+            
+            if (ramProgress) {
+                ramProgress.style.width = `${usedPercent}%`;
+            }
+            
+            if (ramText) {
+                ramText.textContent = `${data.memory.used}MB / ${data.memory.total}MB (${usedPercent}%)`;
+            }
+            
             if (ramUsageText) {
                 ramUsageText.textContent = `${data.memory.used} MB`;
             }
             
             // Update charts
-            const tps = document.getElementById('server-tps').textContent;
             const cpu = data.cpu || 0;
-            updateCharts(tps, cpu, data.memory.used, data.memory.total);
+            updateCharts(20, cpu, data.memory.used, data.memory.total);
         }
         
         if (data.disk) {
-            document.getElementById('disk-usage').textContent = data.disk;
+            const diskUsage = document.getElementById('disk-usage');
+            if (diskUsage) {
+                diskUsage.textContent = data.disk;
+            }
         }
         
         if (data.cpu !== undefined) {
-            document.getElementById('server-cpu').textContent = `${data.cpu}%`;
+            const serverCpu = document.getElementById('server-cpu');
+            if (serverCpu) {
+                serverCpu.textContent = `${data.cpu}%`;
+            }
         }
     } catch (error) {
         console.error('System update error:', error);
@@ -294,7 +325,10 @@ async function updateTPS() {
             const tpsMatch = data.tps.match(/(\d+\.\d+)/);
             if (tpsMatch) {
                 const tps = parseFloat(tpsMatch[0]);
-                document.getElementById('server-tps').textContent = tps.toFixed(1);
+                const serverTps = document.getElementById('server-tps');
+                if (serverTps) {
+                    serverTps.textContent = tps.toFixed(1);
+                }
             }
         }
     } catch (error) {
@@ -329,10 +363,15 @@ async function loadServerSettings() {
         
         if (data.success) {
             const config = data.config;
-            document.getElementById('max-players').value = config['max-players'] || 20;
-            document.getElementById('view-distance').value = config['view-distance'] || 10;
-            document.getElementById('pvp-mode').value = config['pvp'] || 'true';
-            document.getElementById('spawn-protection').value = config['spawn-protection'] || 16;
+            const maxPlayers = document.getElementById('max-players');
+            const viewDistance = document.getElementById('view-distance');
+            const pvpMode = document.getElementById('pvp-mode');
+            const spawnProtection = document.getElementById('spawn-protection');
+            
+            if (maxPlayers) maxPlayers.value = config['max-players'] || 20;
+            if (viewDistance) viewDistance.value = config['view-distance'] || 10;
+            if (pvpMode) pvpMode.value = config['pvp'] || 'true';
+            if (spawnProtection) spawnProtection.value = config['spawn-protection'] || 16;
         }
     } catch (error) {
         console.error('Settings load error:', error);
@@ -340,11 +379,21 @@ async function loadServerSettings() {
 }
 
 async function saveServerSettings() {
+    const maxPlayers = document.getElementById('max-players');
+    const viewDistance = document.getElementById('view-distance');
+    const pvpMode = document.getElementById('pvp-mode');
+    const spawnProtection = document.getElementById('spawn-protection');
+    
+    if (!maxPlayers || !viewDistance || !pvpMode) {
+        showNotification('Hata!', 'Ayar elementleri bulunamadı!', 'error');
+        return;
+    }
+    
     const settings = {
-        'max-players': document.getElementById('max-players').value,
-        'view-distance': document.getElementById('view-distance').value,
-        'pvp': document.getElementById('pvp-mode').value,
-        'spawn-protection': document.getElementById('spawn-protection').value
+        'max-players': maxPlayers.value,
+        'view-distance': viewDistance.value,
+        'pvp': pvpMode.value,
+        'spawn-protection': spawnProtection ? spawnProtection.value : '16'
     };
     
     try {
@@ -453,6 +502,8 @@ function updateButtonStates() {
     const stopBtn = document.getElementById('stop-btn');
     const restartBtn = document.getElementById('restart-btn');
     
+    if (!startBtn || !stopBtn || !restartBtn) return;
+    
     if (serverOnline) {
         startBtn.disabled = true;
         stopBtn.disabled = false;
@@ -524,6 +575,8 @@ async function handlePlayerAction(action) {
 // Console command
 async function sendCommand() {
     const input = document.getElementById('console-command');
+    if (!input) return;
+    
     const command = input.value.trim();
     
     if (!command) return;
@@ -538,13 +591,13 @@ async function sendCommand() {
         const data = await response.json();
         
         if (data.success) {
-            showNotification('Komut gönderildi!', 'success');
+            showNotification('Başarılı!', 'Komut gönderildi!', 'success');
             input.value = '';
         } else {
-            showNotification('Hata: ' + data.error, 'error');
+            showNotification('Hata!', data.error, 'error');
         }
     } catch (error) {
-        showNotification('Komut gönderilemedi!', 'error');
+        showNotification('Hata!', 'Komut gönderilemedi!', 'error');
     }
 }
 
