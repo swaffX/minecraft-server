@@ -1,0 +1,36 @@
+name: NexoraEconomy
+version: 1.0.0
+main: com.nexora.economy.NexoraEconomy
+api-version: '1.21'
+author: Nexora
+description: Ekonomi sistemi
+
+commands:
+  balance:
+    description: Bakiyeni göster
+    usage: /balance [oyuncu]
+    aliases: [bal, money, para]
+  
+  pay:
+    description: Para gönder
+    usage: /pay <oyuncu> <miktar>
+  
+  baltop:
+    description: En zenginler listesi
+    usage: /baltop
+    aliases: [balancetop, topbalance]
+  
+  eco:
+    description: Ekonomi yönetimi
+    usage: /eco <give|take|set> <oyuncu> <miktar>
+    permission: nexoraeconomy.admin
+  
+  daily:
+    description: Günlük ödül
+    usage: /daily
+    aliases: [gunluk]
+
+permissions:
+  nexoraeconomy.admin:
+    description: Ekonomi yönetimi
+    default: op

@@ -36,3 +36,7 @@ plugins/*
 # NexoraRanks plugin kaynak kodlarını tut
 !plugins/NexoraRanks/
 !plugins/NexoraRanks/**
+
+# NexoraEconomy plugin kaynak kodlarını tut
+!plugins/NexoraEconomy/
+!plugins/NexoraEconomy/**
